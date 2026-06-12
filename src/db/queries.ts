@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress } from "./schema";
 
 let db: Database | null = null;
 
@@ -247,4 +247,31 @@ export async function getTranslationExerciseById(id: number): Promise<Translatio
   const db = await getDb();
   const results = await db.select<TranslationExercise[]>("SELECT * FROM translation_exercises WHERE id = ?", [id]);
   return results[0] ?? null;
+}
+
+export async function getTranslationProgress(): Promise<TranslationProgress[]> {
+  const db = await getDb();
+  return db.select<TranslationProgress[]>("SELECT * FROM translation_progress ORDER BY completed_at DESC");
+}
+
+export async function getTranslationProgressByExerciseId(exerciseId: number): Promise<TranslationProgress | null> {
+  const db = await getDb();
+  const results = await db.select<TranslationProgress[]>(
+    "SELECT * FROM translation_progress WHERE exercise_id = ?",
+    [exerciseId]
+  );
+  return results[0] ?? null;
+}
+
+export async function saveTranslationProgress(
+  exerciseId: number,
+  score: number,
+  userTranslation: string
+): Promise<void> {
+  const db = await getDb();
+  const now = Date.now();
+  await db.execute(
+    "INSERT OR REPLACE INTO translation_progress (exercise_id, score, user_translation, completed_at) VALUES (?, ?, ?, ?)",
+    [exerciseId, score, userTranslation, now]
+  );
 }

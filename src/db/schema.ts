@@ -75,3 +75,11 @@ export interface TranslationExercise {
   word_count: number;
   created_at: number;
 }
+
+export interface TranslationProgress {
+  id: number;
+  exercise_id: number;
+  score: number;
+  user_translation: string | null;
+  completed_at: number;
+}

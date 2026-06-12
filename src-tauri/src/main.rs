@@ -32,6 +32,12 @@ fn main() {
                             sql: include_str!("../migrations/04_translation_exercises.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 5,
+                            description: "translation progress",
+                            sql: include_str!("../migrations/05_translation_progress.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

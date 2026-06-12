@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Languages, CheckCircle, AlertCircle, Search, FileText } from "lucide-react";
+import { ArrowLeft, Languages, CheckCircle, AlertCircle, Search, FileText, Star } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getTranslationExercises } from "@/db/queries";
-import type { TranslationExercise } from "@/db/schema";
+import { getTranslationExercises, getTranslationProgress, saveTranslationProgress } from "@/db/queries";
+import type { TranslationExercise, TranslationProgress } from "@/db/schema";
 
 export function TranslationExercises() {
   const setView = useLearnStore((s) => s.setView);
@@ -19,6 +19,7 @@ export function TranslationExercises() {
   const [currentEx, setCurrentEx] = useState<TranslationExercise | null>(null);
   const [userTranslation, setUserTranslation] = useState("");
   const [score, setScore] = useState(0);
+  const [progress, setProgress] = useState<TranslationProgress[]>([]);
 
   useEffect(() => {
     loadAll();
@@ -27,27 +28,39 @@ export function TranslationExercises() {
   async function loadAll() {
     setLoading(true);
     try {
-      const data = await getTranslationExercises(
-        difficultyFilter === "all" ? undefined : difficultyFilter,
-        categoryFilter === "all" ? undefined : categoryFilter
-      );
+      const [data, prog] = await Promise.all([
+        getTranslationExercises(
+          difficultyFilter === "all" ? undefined : difficultyFilter,
+          categoryFilter === "all" ? undefined : categoryFilter
+        ),
+        getTranslationProgress(),
+      ]);
       setExercises(data);
+      setProgress(prog);
     } finally {
       setLoading(false);
     }
   }
 
-  function startExercise(ex: TranslationExercise) {
+  async function startExercise(ex: TranslationExercise) {
     setCurrentEx(ex);
-    setUserTranslation("");
-    setScore(0);
+    const prev = progress.find((p) => p.exercise_id === ex.id);
+    setUserTranslation(prev?.user_translation ?? "");
+    setScore(prev?.score ?? 0);
     setMode("exercise");
   }
 
-  function submitExercise() {
+  async function submitExercise() {
     if (!currentEx) return;
     setMode("result");
+  }
+
+  async function saveAndExit() {
+    if (!currentEx) return;
+    await saveTranslationProgress(currentEx.id, score, userTranslation);
     addXp(score);
+    setProgress(await getTranslationProgress());
+    setMode("list");
   }
 
   function getCategories() {
@@ -158,6 +171,12 @@ export function TranslationExercises() {
                         </span>
                         <span className="text-slate-500 capitalize">{ex.category}</span>
                         <span className="text-slate-500">{ex.word_count} mots</span>
+                        {progress.find((p) => p.exercise_id === ex.id) && (
+                          <span className="flex items-center gap-1 text-amber-400">
+                            <Star size={12} fill="currentColor" />
+                            {progress.find((p) => p.exercise_id === ex.id)?.score}/5
+                          </span>
+                        )}
                       </div>
                     </div>
                     <Languages size={20} className="text-slate-500" />
@@ -264,10 +283,10 @@ export function TranslationExercises() {
 
             <div className="flex gap-3">
               <button
-                onClick={() => setMode("list")}
+                onClick={saveAndExit}
                 className="px-6 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-semibold"
               >
-                Retour à la liste
+                Sauvegarder et quitter
               </button>
               <button
                 onClick={() => startExercise(currentEx)}
