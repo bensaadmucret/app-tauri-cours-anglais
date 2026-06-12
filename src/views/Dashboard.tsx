@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Plus, Brain, List } from "lucide-react";
+import { BookOpen, Plus, Brain, List, Shuffle } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { getDueCards, getStats } from "@/db/queries";
 import { DailyProgress } from "@/components/game/DailyProgress";
@@ -111,6 +111,16 @@ export function Dashboard() {
         >
           <List size={20} />
           Verbes irréguliers
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setView("phrasal")}
+          className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-500 rounded-xl font-semibold shadow-lg transition-colors"
+        >
+          <Shuffle size={20} />
+          Phrasal Verbs
         </motion.button>
       </div>
     </div>

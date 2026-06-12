@@ -4,6 +4,7 @@ import { Dashboard } from "@/views/Dashboard";
 import { StudySession } from "@/views/StudySession";
 import { CardBuilder } from "@/views/CardBuilder";
 import { IrregularVerbs } from "@/views/IrregularVerbs";
+import { PhrasalVerbs } from "@/views/PhrasalVerbs";
 
 export default function App() {
   const currentView = useLearnStore((s) => s.currentView);
@@ -21,6 +22,7 @@ export default function App() {
         {currentView === "study" && <StudySession />}
         {currentView === "builder" && <CardBuilder />}
         {currentView === "verbs" && <IrregularVerbs />}
+        {currentView === "phrasal" && <PhrasalVerbs />}
       </motion.div>
     </AnimatePresence>
   );

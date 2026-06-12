@@ -54,3 +54,13 @@ export interface IrregularVerb {
   level: string;
   created_at: number;
 }
+
+export interface PhrasalVerb {
+  id: number;
+  verb: string;
+  particle: string;
+  meaning: string;
+  example: string | null;
+  level: string;
+  created_at: number;
+}

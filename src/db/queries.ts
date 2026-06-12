@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb } from "./schema";
 
 let db: Database | null = null;
 
@@ -200,5 +200,22 @@ export async function getIrregularVerbs(level?: string): Promise<IrregularVerb[]
 export async function getIrregularVerbById(id: number): Promise<IrregularVerb | null> {
   const db = await getDb();
   const results = await db.select<IrregularVerb[]>("SELECT * FROM irregular_verbs WHERE id = ?", [id]);
+  return results[0] ?? null;
+}
+
+export async function getPhrasalVerbs(level?: string): Promise<PhrasalVerb[]> {
+  const db = await getDb();
+  if (level) {
+    return db.select<PhrasalVerb[]>(
+      "SELECT * FROM phrasal_verbs WHERE level = ? ORDER BY verb ASC",
+      [level]
+    );
+  }
+  return db.select<PhrasalVerb[]>("SELECT * FROM phrasal_verbs ORDER BY verb ASC");
+}
+
+export async function getPhrasalVerbById(id: number): Promise<PhrasalVerb | null> {
+  const db = await getDb();
+  const results = await db.select<PhrasalVerb[]>("SELECT * FROM phrasal_verbs WHERE id = ?", [id]);
   return results[0] ?? null;
 }

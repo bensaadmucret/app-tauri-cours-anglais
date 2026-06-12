@@ -20,6 +20,12 @@ fn main() {
                             sql: include_str!("../migrations/02_irregular_verbs.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 3,
+                            description: "phrasal verbs",
+                            sql: include_str!("../migrations/03_phrasal_verbs.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),
