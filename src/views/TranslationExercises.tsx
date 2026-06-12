@@ -1,0 +1,284 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Languages, CheckCircle, AlertCircle, Search, FileText } from "lucide-react";
+import { useLearnStore } from "@/store/useLearnStore";
+import { getTranslationExercises } from "@/db/queries";
+import type { TranslationExercise } from "@/db/schema";
+
+export function TranslationExercises() {
+  const setView = useLearnStore((s) => s.setView);
+  const addXp = useLearnStore((s) => s.addXp);
+
+  const [exercises, setExercises] = useState<TranslationExercise[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState<"list" | "exercise" | "result">("list");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [search, setSearch] = useState("");
+
+  const [currentEx, setCurrentEx] = useState<TranslationExercise | null>(null);
+  const [userTranslation, setUserTranslation] = useState("");
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    loadAll();
+  }, []);
+
+  async function loadAll() {
+    setLoading(true);
+    try {
+      const data = await getTranslationExercises(
+        difficultyFilter === "all" ? undefined : difficultyFilter,
+        categoryFilter === "all" ? undefined : categoryFilter
+      );
+      setExercises(data);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function startExercise(ex: TranslationExercise) {
+    setCurrentEx(ex);
+    setUserTranslation("");
+    setScore(0);
+    setMode("exercise");
+  }
+
+  function submitExercise() {
+    if (!currentEx) return;
+    setMode("result");
+    addXp(score);
+  }
+
+  function getCategories() {
+    const cats = new Set(exercises.map((e) => e.category));
+    return Array.from(cats).sort();
+  }
+
+  const filtered = exercises.filter((e) => {
+    const d = difficultyFilter === "all" || e.difficulty === difficultyFilter;
+    const c = categoryFilter === "all" || e.category === categoryFilter;
+    const q = search.toLowerCase();
+    const s = e.title.toLowerCase().includes(q) || e.source.toLowerCase().includes(q);
+    return d && c && s;
+  });
+
+  const difficultyColor = (d: string) => {
+    switch (d) {
+      case "easy": return "text-emerald-400";
+      case "medium": return "text-amber-400";
+      case "hard": return "text-rose-400";
+      default: return "text-slate-400";
+    }
+  };
+
+  const difficultyLabel = (d: string) => {
+    switch (d) {
+      case "easy": return "Facile";
+      case "medium": return "Moyen";
+      case "hard": return "Difficile";
+      default: return d;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-slate-400">
+        Chargement...
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-4 mb-6">
+          <button
+            onClick={() => setView("dashboard")}
+            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">
+            Exercices de Traduction
+          </h1>
+        </div>
+
+        {mode === "list" && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex flex-wrap gap-3 mb-4">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Rechercher..."
+                  className="w-full bg-slate-800 border border-slate-600 rounded-xl pl-9 pr-4 py-2 focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <select
+                value={difficultyFilter}
+                onChange={(e) => { setDifficultyFilter(e.target.value); }}
+                className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2 focus:outline-none focus:border-sky-500"
+              >
+                <option value="all">Toutes difficultés</option>
+                <option value="easy">Facile</option>
+                <option value="medium">Moyen</option>
+                <option value="hard">Difficile</option>
+              </select>
+              <select
+                value={categoryFilter}
+                onChange={(e) => { setCategoryFilter(e.target.value); }}
+                className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2 focus:outline-none focus:border-sky-500"
+              >
+                <option value="all">Toutes catégories</option>
+                {getCategories().map((cat) => (
+                  <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid gap-3">
+              {filtered.map((ex) => (
+                <button
+                  key={ex.id}
+                  onClick={() => startExercise(ex)}
+                  className="text-left bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-rose-500 transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <FileText size={18} className="text-rose-400" />
+                        <span className="text-lg font-bold">{ex.title}</span>
+                      </div>
+                      <p className="text-sm text-slate-400 line-clamp-2">{ex.source}</p>
+                      <div className="flex gap-3 mt-2 text-xs">
+                        <span className={`font-medium ${difficultyColor(ex.difficulty)}`}>
+                          {difficultyLabel(ex.difficulty)}
+                        </span>
+                        <span className="text-slate-500 capitalize">{ex.category}</span>
+                        <span className="text-slate-500">{ex.word_count} mots</span>
+                      </div>
+                    </div>
+                    <Languages size={20} className="text-slate-500" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {mode === "exercise" && currentEx && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold">{currentEx.title}</h2>
+              <div className="flex gap-2 text-sm">
+                <span className={`px-2 py-1 rounded bg-slate-800 ${difficultyColor(currentEx.difficulty)}`}>
+                  {difficultyLabel(currentEx.difficulty)}
+                </span>
+                <span className="px-2 py-1 rounded bg-slate-800 text-slate-400 capitalize">
+                  {currentEx.category}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 mb-4">
+              <p className="text-sm text-slate-400 mb-1">Texte à traduire :</p>
+              <p className="text-lg leading-relaxed">{currentEx.source}</p>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-slate-400 mb-2">Ta traduction (français) :</p>
+              <textarea
+                value={userTranslation}
+                onChange={(e) => setUserTranslation(e.target.value)}
+                placeholder="Écris ta traduction ici..."
+                rows={8}
+                className="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:border-rose-500 resize-y"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex gap-3 mb-4">
+              <button
+                onClick={submitExercise}
+                className="px-6 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-semibold"
+              >
+                <CheckCircle size={18} className="inline mr-1" />
+                Voir la correction
+              </button>
+              <button
+                onClick={() => setMode("list")}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl"
+              >
+                Abandonner
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {mode === "result" && currentEx && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <AlertCircle size={24} className="text-rose-400" />
+              Correction
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <p className="text-sm text-slate-400 mb-2">Texte original (anglais)</p>
+                <p className="leading-relaxed">{currentEx.source}</p>
+              </div>
+              <div className="bg-slate-800 rounded-xl p-4 border border-rose-500/50">
+                <p className="text-sm text-rose-400 mb-2">Corrigé (français)</p>
+                <p className="leading-relaxed">{currentEx.translation}</p>
+              </div>
+            </div>
+
+            <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 mb-6">
+              <p className="text-sm text-slate-400 mb-2">Ta traduction :</p>
+              <p className="leading-relaxed text-slate-300">{userTranslation || "(vide)"}</p>
+            </div>
+
+            <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 mb-6">
+              <p className="text-sm text-slate-400 mb-2">Auto-évaluation :</p>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setScore(n)}
+                    className={`w-10 h-10 rounded-lg font-bold transition-colors ${
+                      score >= n
+                        ? "bg-rose-500 text-white"
+                        : "bg-slate-700 text-slate-400 hover:bg-slate-600"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                1 = Très éloigné — 5 = Parfait
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setMode("list")}
+                className="px-6 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-semibold"
+              >
+                Retour à la liste
+              </button>
+              <button
+                onClick={() => startExercise(currentEx)}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl"
+              >
+                Réessayer
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}

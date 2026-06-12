@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise } from "./schema";
 
 let db: Database | null = null;
 
@@ -217,5 +217,34 @@ export async function getPhrasalVerbs(level?: string): Promise<PhrasalVerb[]> {
 export async function getPhrasalVerbById(id: number): Promise<PhrasalVerb | null> {
   const db = await getDb();
   const results = await db.select<PhrasalVerb[]>("SELECT * FROM phrasal_verbs WHERE id = ?", [id]);
+  return results[0] ?? null;
+}
+
+export async function getTranslationExercises(difficulty?: string, category?: string): Promise<TranslationExercise[]> {
+  const db = await getDb();
+  if (difficulty && category) {
+    return db.select<TranslationExercise[]>(
+      "SELECT * FROM translation_exercises WHERE difficulty = ? AND category = ? ORDER BY id ASC",
+      [difficulty, category]
+    );
+  }
+  if (difficulty) {
+    return db.select<TranslationExercise[]>(
+      "SELECT * FROM translation_exercises WHERE difficulty = ? ORDER BY id ASC",
+      [difficulty]
+    );
+  }
+  if (category) {
+    return db.select<TranslationExercise[]>(
+      "SELECT * FROM translation_exercises WHERE category = ? ORDER BY id ASC",
+      [category]
+    );
+  }
+  return db.select<TranslationExercise[]>("SELECT * FROM translation_exercises ORDER BY id ASC");
+}
+
+export async function getTranslationExerciseById(id: number): Promise<TranslationExercise | null> {
+  const db = await getDb();
+  const results = await db.select<TranslationExercise[]>("SELECT * FROM translation_exercises WHERE id = ?", [id]);
   return results[0] ?? null;
 }

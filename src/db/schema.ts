@@ -64,3 +64,14 @@ export interface PhrasalVerb {
   level: string;
   created_at: number;
 }
+
+export interface TranslationExercise {
+  id: number;
+  title: string;
+  source: string;
+  translation: string;
+  difficulty: string;
+  category: string;
+  word_count: number;
+  created_at: number;
+}

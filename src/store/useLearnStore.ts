@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Card } from "@/db/schema";
 
-export type View = "dashboard" | "study" | "builder" | "verbs" | "phrasal";
+export type View = "dashboard" | "study" | "builder" | "verbs" | "phrasal" | "translation";
 
 interface PersistedState {
   xp: number;

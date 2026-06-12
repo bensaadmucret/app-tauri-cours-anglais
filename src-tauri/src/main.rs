@@ -26,6 +26,12 @@ fn main() {
                             sql: include_str!("../migrations/03_phrasal_verbs.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 4,
+                            description: "translation exercises",
+                            sql: include_str!("../migrations/04_translation_exercises.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

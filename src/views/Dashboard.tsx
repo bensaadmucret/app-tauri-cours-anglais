@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Plus, Brain, List, Shuffle } from "lucide-react";
+import { BookOpen, Plus, Brain, List, Shuffle, Languages } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { getDueCards, getStats } from "@/db/queries";
 import { DailyProgress } from "@/components/game/DailyProgress";
@@ -121,6 +121,16 @@ export function Dashboard() {
         >
           <Shuffle size={20} />
           Phrasal Verbs
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setView("translation")}
+          className="flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-semibold shadow-lg transition-colors"
+        >
+          <Languages size={20} />
+          Traduction
         </motion.button>
       </div>
     </div>
