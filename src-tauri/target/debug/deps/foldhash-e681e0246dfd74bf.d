@@ -1,0 +1,10 @@
+/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/foldhash-e681e0246dfd74bf.d: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/fast.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/quality.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/seed.rs
+
+/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/libfoldhash-e681e0246dfd74bf.rlib: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/fast.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/quality.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/seed.rs
+
+/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/libfoldhash-e681e0246dfd74bf.rmeta: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/fast.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/quality.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/seed.rs
+
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/lib.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/fast.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/quality.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/foldhash-0.1.5/src/seed.rs:

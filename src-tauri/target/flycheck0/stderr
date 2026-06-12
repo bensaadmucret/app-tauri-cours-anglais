@@ -1,0 +1,62 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   6.419052593s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint: stale: changed "/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/tauri.conf.json"
+   6.419103491s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint:           (vs) "/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/build/cours-anglais-d9c19bd29dd61afc/output"
+   6.419116498s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1781295534, nanos: 796220185 } < FileTime { seconds: 1781295926, nanos: 680201537 }
+   6.982490495s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint: fingerprint error for cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri)/Check { test: false }/TargetInner { name: "cours-anglais", doc: true, ..: with_path("/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/src/main.rs", Edition2021) }
+   6.982542611s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/.fingerprint/cours-anglais-1e35fcf3b5f66ce3/bin-cours-anglais`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   7.081011116s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint dirty for cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri)/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/build.rs", Edition2021) }
+   7.081043239s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="build-script-build"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/build/cours-anglais-d9c19bd29dd61afc/output", reference_mtime: FileTime { seconds: 1781295534, nanos: 796220185 }, stale: "/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/tauri.conf.json", stale_mtime: FileTime { seconds: 1781295926, nanos: 680201537 } }))
+   8.073357395s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint: fingerprint error for cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri)/Check { test: true }/TargetInner { name: "cours-anglais", doc: true, ..: with_path("/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/src/main.rs", Edition2021) }
+   8.073482848s  INFO prepare_target{force=false package_id=cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri) target="cours-anglais"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/.fingerprint/cours-anglais-92d9151b52a6d32d/test-bin-cours-anglais`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: std::backtrace::Backtrace::capture
+   2: cargo_util::paths::read_bytes
+   3: cargo_util::paths::read
+   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   5: cargo::core::compiler::fingerprint::prepare_target
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+  18: <unknown>
+   Compiling cours-anglais v0.1.0 (/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 17.06s

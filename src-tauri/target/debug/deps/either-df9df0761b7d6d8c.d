@@ -1,0 +1,9 @@
+/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/either-df9df0761b7d6d8c.d: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged_optional.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/iterator.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/into_either.rs
+
+/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/libeither-df9df0761b7d6d8c.rmeta: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged_optional.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/iterator.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/into_either.rs
+
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/lib.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/serde_untagged_optional.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/iterator.rs:
+/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/either-1.16.0/src/into_either.rs:
