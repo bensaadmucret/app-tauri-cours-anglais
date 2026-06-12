@@ -60,4 +60,4 @@ src-tauri/
 
 ## Licence
 
-MIT
+GPL v3 — Copyright (C) 2026 Mohammed Bensaadmucret
