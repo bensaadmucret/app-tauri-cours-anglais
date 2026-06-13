@@ -103,12 +103,22 @@ export function CardBuilder() {
           {entry.phonetic && (
             <p className="text-slate-400 mb-3">/{entry.phonetic}/</p>
           )}
-          <p className="text-slate-100 mb-2">
+          <p className="text-slate-100 mb-1">
             <span className="text-slate-500">Définition :</span> {entry.definition}
           </p>
+          {entry.translation && (
+            <p className="text-emerald-400 mb-2">
+              <span className="text-emerald-600 text-sm">Traduction :</span> {entry.translation}
+            </p>
+          )}
           {entry.example && (
-            <p className="text-slate-300 italic mb-4">
+            <p className="text-slate-300 italic mb-1">
               “{entry.example}”
+            </p>
+          )}
+          {entry.exampleTranslation && (
+            <p className="text-emerald-400/80 italic mb-4">
+              <span className="text-emerald-600 text-sm not-italic">Traduction :</span> “{entry.exampleTranslation}”
             </p>
           )}
           {entry.audio && (

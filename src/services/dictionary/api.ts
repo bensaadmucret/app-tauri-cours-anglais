@@ -4,6 +4,20 @@ export interface DictionaryEntry {
   audio?: string;
   definition: string;
   example?: string;
+  translation?: string;
+  exampleTranslation?: string;
+}
+
+async function translateText(text: string): Promise<string | undefined> {
+  try {
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|fr`
+    );
+    const data = await res.json();
+    return data.responseData?.translatedText;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function fetchWord(word: string): Promise<DictionaryEntry | null> {
@@ -19,11 +33,21 @@ export async function fetchWord(word: string): Promise<DictionaryEntry | null> {
   const meaning = entry.meanings?.[0];
   const def = meaning?.definitions?.[0];
 
+  const definition = def?.definition || "";
+  const example = def?.example;
+
+  const [translation, exampleTranslation] = await Promise.all([
+    translateText(definition),
+    example ? translateText(example) : Promise.resolve(undefined),
+  ]);
+
   return {
     word: entry.word,
     phonetic,
     audio,
-    definition: def?.definition || "",
-    example: def?.example,
+    definition,
+    example,
+    translation,
+    exampleTranslation,
   };
 }
