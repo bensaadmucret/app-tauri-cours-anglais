@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress } from "./schema";
 
 let db: Database | null = null;
 
@@ -273,5 +273,77 @@ export async function saveTranslationProgress(
   await db.execute(
     "INSERT OR REPLACE INTO translation_progress (exercise_id, score, user_translation, completed_at) VALUES (?, ?, ?, ?)",
     [exerciseId, score, userTranslation, now]
+  );
+}
+
+export async function getGrammarLessons(level?: string, category?: string): Promise<GrammarLesson[]> {
+  const db = await getDb();
+  if (level && category) {
+    return db.select<GrammarLesson[]>(
+      "SELECT * FROM grammar_lessons WHERE level = ? AND category = ? ORDER BY order_index ASC",
+      [level, category]
+    );
+  }
+  if (level) {
+    return db.select<GrammarLesson[]>(
+      "SELECT * FROM grammar_lessons WHERE level = ? ORDER BY order_index ASC",
+      [level]
+    );
+  }
+  if (category) {
+    return db.select<GrammarLesson[]>(
+      "SELECT * FROM grammar_lessons WHERE category = ? ORDER BY order_index ASC",
+      [category]
+    );
+  }
+  return db.select<GrammarLesson[]>("SELECT * FROM grammar_lessons ORDER BY order_index ASC");
+}
+
+export async function getGrammarLessonBySlug(slug: string): Promise<GrammarLesson | null> {
+  const db = await getDb();
+  const results = await db.select<GrammarLesson[]>("SELECT * FROM grammar_lessons WHERE slug = ?", [slug]);
+  return results[0] ?? null;
+}
+
+export async function getGrammarLessonById(id: number): Promise<GrammarLesson | null> {
+  const db = await getDb();
+  const results = await db.select<GrammarLesson[]>("SELECT * FROM grammar_lessons WHERE id = ?", [id]);
+  return results[0] ?? null;
+}
+
+export async function getGrammarExercises(lessonId: number): Promise<GrammarExercise[]> {
+  const db = await getDb();
+  return db.select<GrammarExercise[]>(
+    "SELECT * FROM grammar_exercises WHERE lesson_id = ? ORDER BY order_index ASC",
+    [lessonId]
+  );
+}
+
+export async function getGrammarProgress(): Promise<GrammarProgress[]> {
+  const db = await getDb();
+  return db.select<GrammarProgress[]>("SELECT * FROM grammar_progress ORDER BY completed_at DESC");
+}
+
+export async function getGrammarProgressByLesson(lessonId: number): Promise<GrammarProgress | null> {
+  const db = await getDb();
+  const results = await db.select<GrammarProgress[]>(
+    "SELECT * FROM grammar_progress WHERE lesson_id = ?",
+    [lessonId]
+  );
+  return results[0] ?? null;
+}
+
+export async function saveGrammarProgress(
+  lessonId: number,
+  score: number,
+  total: number,
+  lastExerciseId: number
+): Promise<void> {
+  const db = await getDb();
+  const now = Date.now();
+  const completed = score === total ? 1 : 0;
+  await db.execute(
+    "INSERT OR REPLACE INTO grammar_progress (lesson_id, completed, score, total, last_exercise_id, completed_at) VALUES (?, ?, ?, ?, ?, ?)",
+    [lessonId, completed, score, total, lastExerciseId, now]
   );
 }

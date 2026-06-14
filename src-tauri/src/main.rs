@@ -38,6 +38,12 @@ fn main() {
                             sql: include_str!("../migrations/05_translation_progress.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 6,
+                            description: "grammar lessons and exercises",
+                            sql: include_str!("../migrations/06_grammar.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

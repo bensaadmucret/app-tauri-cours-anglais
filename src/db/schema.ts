@@ -83,3 +83,37 @@ export interface TranslationProgress {
   user_translation: string | null;
   completed_at: number;
 }
+
+export interface GrammarLesson {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  content: string;
+  category: string;
+  level: string;
+  order_index: number;
+  created_at: number;
+}
+
+export interface GrammarExercise {
+  id: number;
+  lesson_id: number;
+  type: "qcm" | "fill_blank" | "reorder" | "match";
+  question: string;
+  options: string | null;
+  correct_answer: string;
+  explanation: string | null;
+  points: number;
+  order_index: number;
+}
+
+export interface GrammarProgress {
+  id: number;
+  lesson_id: number;
+  completed: number;
+  score: number;
+  total: number;
+  last_exercise_id: number | null;
+  completed_at: number | null;
+}
