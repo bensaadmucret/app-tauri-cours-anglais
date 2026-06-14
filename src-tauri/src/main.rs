@@ -44,6 +44,12 @@ fn main() {
                             sql: include_str!("../migrations/06_grammar.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 7,
+                            description: "add french translation to cards",
+                            sql: include_str!("../migrations/07_add_translation_fr_to_cards.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

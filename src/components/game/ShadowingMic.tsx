@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Mic, MicOff } from "lucide-react";
-import { useEffect } from "react";
+import { Mic, MicOff, Send } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 interface ShadowingMicProps {
@@ -11,6 +11,7 @@ interface ShadowingMicProps {
 export function ShadowingMic({ targetWord, onResult }: ShadowingMicProps) {
   const { isListening, transcript, startListening, stopListening, error, supported } =
     useSpeechRecognition();
+  const [manualText, setManualText] = useState("");
 
   useEffect(() => {
     if (transcript) {
@@ -18,15 +19,9 @@ export function ShadowingMic({ targetWord, onResult }: ShadowingMicProps) {
     }
   }, [transcript, onResult]);
 
-  if (!supported) {
-    return (
-      <p className="text-amber-400 text-sm text-center">
-        Reconnaissance vocale non supportée
-      </p>
-    );
-  }
-
   const isCorrect = transcript.toLowerCase().trim() === targetWord.toLowerCase().trim();
+  const manualCorrect = manualText.toLowerCase().trim() === targetWord.toLowerCase().trim();
+  const hasError = error && (error.includes("service-not-allowed") || error.includes("not-allowed"));
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -64,7 +59,39 @@ export function ShadowingMic({ targetWord, onResult }: ShadowingMicProps) {
         </motion.p>
       )}
 
-      {error && <p className="text-rose-400 text-sm">{error}</p>}
+      {error && <p className="text-rose-400 text-sm text-center max-w-xs">{error}</p>}
+
+      {(!supported || hasError) && (
+        <div className="w-full max-w-sm mt-2">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={manualText}
+              onChange={(e) => setManualText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && manualText) {
+                  onResult(manualText);
+                }
+              }}
+              placeholder="Tapez le mot ici..."
+              className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-emerald-500"
+              autoFocus
+            />
+            <button
+              onClick={() => manualText && onResult(manualText)}
+              disabled={!manualText}
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 rounded-lg transition-colors"
+            >
+              <Send size={16} />
+            </button>
+          </div>
+          {manualText && (
+            <p className={`text-sm mt-2 text-center ${manualCorrect ? "text-emerald-400" : "text-slate-400"}`}>
+              {manualCorrect ? "Parfait !" : "Continuez à taper..."}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

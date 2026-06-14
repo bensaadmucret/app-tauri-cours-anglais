@@ -49,6 +49,11 @@ export function Flashcard({ card }: FlashcardProps) {
           style={{ transform: "rotateY(180deg)" }}
         >
           <p className="text-lg text-slate-100 text-center leading-relaxed">{card.definition}</p>
+          {card.translation_fr && (
+            <p className="mt-2 text-emerald-400 text-center font-medium">
+              {card.translation_fr}
+            </p>
+          )}
           {card.example && (
             <p className="mt-4 text-slate-400 italic text-center">“{card.example}”</p>
           )}

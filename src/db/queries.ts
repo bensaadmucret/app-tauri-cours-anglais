@@ -95,8 +95,8 @@ export async function getCardById(id: number): Promise<Card | null> {
 export async function insertCard(card: CardInput): Promise<number> {
   const db = await getDb();
   const result = await db.execute(
-    `INSERT INTO cards (deck_id, word, phonetic, definition, example, audio_url) VALUES (?, ?, ?, ?, ?, ?)`,
-    [card.deck_id, card.word, card.phonetic, card.definition, card.example, card.audio_url]
+    `INSERT INTO cards (deck_id, word, phonetic, definition, example, audio_url, translation_fr) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [card.deck_id, card.word, card.phonetic, card.definition, card.example, card.audio_url, card.translation_fr ?? null]
   );
   return result.lastInsertId ?? 0;
 }

@@ -43,7 +43,18 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      setError(event.error);
+      const err = event.error;
+      let msg = err;
+      if (err === "not-allowed") {
+        msg = "Accès au microphone refusé. Autorisez le microphone dans Préférences Système > Sécurité et confidentialité > Microphone.";
+      } else if (err === "service-not-allowed") {
+        msg = "La reconnaissance vocale n'est pas disponible dans l'application native. Utilisez le mode texte ci-dessous.";
+      } else if (err === "network") {
+        msg = "Problème réseau. La reconnaissance vocale nécessite une connexion internet.";
+      } else if (err === "no-speech") {
+        msg = "Aucune parole détectée. Essayez à nouveau.";
+      }
+      setError(msg);
       setIsListening(false);
     };
 

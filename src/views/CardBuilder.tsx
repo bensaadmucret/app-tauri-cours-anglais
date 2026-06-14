@@ -42,6 +42,7 @@ export function CardBuilder() {
         definition: entry.definition,
         example: entry.example || null,
         audio_url: entry.audio || null,
+        translation_fr: entry.translation || null,
       });
       setEntry(null);
       setWord("");
