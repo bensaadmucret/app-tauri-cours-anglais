@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Plus, Brain, List, Shuffle, Languages, GraduationCap } from "lucide-react";
+import { BookOpen, Plus, Brain, List, Shuffle, Languages, GraduationCap, Hash } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { getDueCards, getStats } from "@/db/queries";
 import { DailyProgress } from "@/components/game/DailyProgress";
@@ -142,6 +142,17 @@ export function Dashboard() {
           <GraduationCap size={20} />
           Grammaire
         </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setView("numbers")}
+          className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-500 rounded-xl font-semibold shadow-lg transition-colors"
+        >
+          <Hash size={20} />
+          Chiffres & Nombres
+        </motion.button>
+
       </div>
     </div>
   );

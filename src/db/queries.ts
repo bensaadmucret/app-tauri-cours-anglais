@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress, LongTranslationExercise, ExtendedTranslationExercise, NumberExercise } from "./schema";
 
 let db: Database | null = null;
 
@@ -347,3 +347,78 @@ export async function saveGrammarProgress(
     [lessonId, completed, score, total, lastExerciseId, now]
   );
 }
+
+// Long Translation Exercises
+export async function getLongTranslationExercises(): Promise<LongTranslationExercise[]> {
+  const db = await getDb();
+  return db.select<LongTranslationExercise[]>("SELECT * FROM long_translation_exercises ORDER BY RANDOM()");
+}
+
+export async function getLongTranslationExercisesByCategory(category: string): Promise<LongTranslationExercise[]> {
+  const db = await getDb();
+  return db.select<LongTranslationExercise[]>(
+    "SELECT * FROM long_translation_exercises WHERE category = ? ORDER BY RANDOM()",
+    [category]
+  );
+}
+
+export async function getLongTranslationExerciseById(id: number): Promise<LongTranslationExercise | null> {
+  const db = await getDb();
+  const results = await db.select<LongTranslationExercise[]>(
+    "SELECT * FROM long_translation_exercises WHERE id = ?",
+    [id]
+  );
+  return results[0] ?? null;
+}
+
+export async function getExtendedTranslationExercises(category?: string): Promise<ExtendedTranslationExercise[]> {
+  const db = await getDb();
+  if (category) {
+    return db.select<ExtendedTranslationExercise[]>(
+      "SELECT * FROM extended_translation_exercises WHERE category = ? ORDER BY id",
+      [category]
+    );
+  }
+  return db.select<ExtendedTranslationExercise[]>("SELECT * FROM extended_translation_exercises ORDER BY id");
+}
+
+export async function getExtendedTranslationExerciseById(id: number): Promise<ExtendedTranslationExercise | null> {
+  const db = await getDb();
+  const results = await db.select<ExtendedTranslationExercise[]>(
+    "SELECT * FROM extended_translation_exercises WHERE id = ?",
+    [id]
+  );
+  return results[0] ?? null;
+}
+
+export async function getNumberExercises(type?: string, difficulty?: string): Promise<NumberExercise[]> {
+  const db = await getDb();
+  if (type && difficulty) {
+    return db.select<NumberExercise[]>(
+      "SELECT * FROM number_exercises WHERE type = ? AND difficulty = ? ORDER BY id",
+      [type, difficulty]
+    );
+  }
+  if (type) {
+    return db.select<NumberExercise[]>(
+      "SELECT * FROM number_exercises WHERE type = ? ORDER BY id",
+      [type]
+    );
+  }
+  if (difficulty) {
+    return db.select<NumberExercise[]>(
+      "SELECT * FROM number_exercises WHERE difficulty = ? ORDER BY id",
+      [difficulty]
+    );
+  }
+  return db.select<NumberExercise[]>("SELECT * FROM number_exercises ORDER BY id");
+}
+
+export async function getNumberExerciseTypes(): Promise<string[]> {
+  const db = await getDb();
+  const results = await db.select<{ type: string }[]>(
+    "SELECT DISTINCT type FROM number_exercises ORDER BY type"
+  );
+  return results.map((r) => r.type);
+}
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -11,6 +11,7 @@ import {
   Trophy,
   RotateCcw,
 } from "lucide-react";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLearnStore } from "@/store/useLearnStore";
 import {
   getGrammarLessons,
@@ -37,10 +38,26 @@ export function Grammar() {
   const [levelFilter, setLevelFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const { speak } = useTextToSpeech();
+  const lessonContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadAll();
   }, []);
+
+  useEffect(() => {
+    if (mode !== "lesson" || !lessonContentRef.current) return;
+    const container = lessonContentRef.current;
+    const buttons = container.querySelectorAll<HTMLButtonElement>(".grammar-speak-btn");
+    const onClick = (e: Event) => {
+      e.stopPropagation();
+      const btn = e.currentTarget as HTMLButtonElement;
+      const text = btn.getAttribute("data-text");
+      if (text) speak(text);
+    };
+    buttons.forEach((btn) => btn.addEventListener("click", onClick));
+    return () => buttons.forEach((btn) => btn.removeEventListener("click", onClick));
+  }, [mode, currentLesson?.content, speak]);
 
   async function loadAll() {
     setLoading(true);
@@ -247,8 +264,18 @@ export function Grammar() {
           </div>
           <h2 className="text-xl font-bold mb-4">{currentLesson.title}</h2>
           <div
+            ref={lessonContentRef}
             className="prose prose-invert prose-sm max-w-none bg-slate-800 rounded-xl p-6 border border-slate-700 mb-6"
-            dangerouslySetInnerHTML={{ __html: currentLesson.content }}
+            dangerouslySetInnerHTML={{
+              __html: currentLesson.content.replace(
+                /<i>([\s\S]*?)<\/i>/g,
+                (match, inner) => {
+                  const clean = inner.replace(/<[^>]*>/g, "");
+                  if (!clean.trim()) return match;
+                  return `<span class="inline-flex items-center gap-1 flex-wrap"><i>${inner}</i><button type="button" class="grammar-speak-btn inline-flex items-center justify-center w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 hover:bg-sky-500/40 transition-colors shrink-0" data-text="${clean.replace(/"/g, "&quot;")}" title="Écouter">🔊</button></span>`;
+                }
+              ),
+            }}
           />
           <div className="flex gap-3">
             <button

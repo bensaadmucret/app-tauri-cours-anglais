@@ -7,6 +7,7 @@ import { IrregularVerbs } from "@/views/IrregularVerbs";
 import { PhrasalVerbs } from "@/views/PhrasalVerbs";
 import { TranslationExercises } from "@/views/TranslationExercises";
 import { Grammar } from "@/views/Grammar";
+import { NumberExercises } from "@/views/NumberExercises";
 
 export default function App() {
   const currentView = useLearnStore((s) => s.currentView);
@@ -27,6 +28,7 @@ export default function App() {
         {currentView === "phrasal" && <PhrasalVerbs />}
         {currentView === "translation" && <TranslationExercises />}
         {currentView === "grammar" && <Grammar />}
+        {currentView === "numbers" && <NumberExercises />}
       </motion.div>
     </AnimatePresence>
   );

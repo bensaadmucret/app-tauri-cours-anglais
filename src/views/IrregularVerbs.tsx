@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -36,9 +36,12 @@ export function IrregularVerbs() {
   const [done, setDone] = useState(false);
   const [pastOk, setPastOk] = useState<boolean | null>(null);
   const [partOk, setPartOk] = useState<boolean | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const [fcRev, setFcRev] = useState(false);
   const [search, setSearch] = useState("");
+
+  const scoreRef = useRef({ ok: 0, total: 0 });
 
   useEffect(() => {
     loadAll();
@@ -46,8 +49,12 @@ export function IrregularVerbs() {
 
   async function loadAll() {
     setLoading(true);
+    setLoadError(null);
     try {
       setVerbs(await getIrregularVerbs());
+    } catch (e: any) {
+      setLoadError(e?.message || "Erreur de chargement");
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -66,12 +73,15 @@ export function IrregularVerbs() {
   }
 
   function startQuiz() {
-    setPool(pick(10));
+    const selected = pick(10);
+    if (selected.length === 0) return;
+    setPool(selected);
     setIdx(0);
     setPastIn("");
     setPartIn("");
     setRevealed(false);
     setScore({ ok: 0, total: 0 });
+    scoreRef.current = { ok: 0, total: 0 };
     setDone(false);
     setPastOk(null);
     setPartOk(null);
@@ -79,7 +89,9 @@ export function IrregularVerbs() {
   }
 
   function startFc() {
-    setPool(pick());
+    const selected = pick();
+    if (selected.length === 0) return;
+    setPool(selected);
     setIdx(0);
     setFcRev(false);
     setMode("flashcard");
@@ -101,14 +113,16 @@ export function IrregularVerbs() {
     const pr = matches(partIn, v.past_participle);
     setPastOk(p);
     setPartOk(pr);
-    setScore((s) => ({ ok: s.ok + (p && pr ? 1 : 0), total: s.total + 1 }));
+    const newScore = { ok: scoreRef.current.ok + (p && pr ? 1 : 0), total: scoreRef.current.total + 1 };
+    scoreRef.current = newScore;
+    setScore(newScore);
     setRevealed(true);
   }
 
   function next() {
     if (idx + 1 >= pool.length) {
       setDone(true);
-      addXp(score.ok + (pastOk && partOk ? 1 : 0));
+      addXp(scoreRef.current.ok);
     } else {
       setIdx((i) => i + 1);
       setPastIn("");
@@ -203,7 +217,14 @@ export function IrregularVerbs() {
               </button>
             </div>
 
+            {loadError && (
+              <p className="text-rose-400 mb-4">Erreur : {loadError}</p>
+            )}
+
             <div className="grid gap-3">
+              {listVerbs.length === 0 && !loading && !loadError && (
+                <p className="text-slate-500 text-center py-10">Aucun verbe trouvé.</p>
+              )}
               {listVerbs.map((vb) => (
                 <div
                   key={vb.id}

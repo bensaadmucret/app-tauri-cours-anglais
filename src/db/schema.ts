@@ -120,3 +120,34 @@ export interface GrammarProgress {
   last_exercise_id: number | null;
   completed_at: number | null;
 }
+
+export interface LongTranslationExercise {
+  id: number;
+  title: string;
+  source: string;
+  translation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  category: string;
+  word_count: number;
+}
+
+export interface ExtendedTranslationExercise {
+  id: number;
+  title: string;
+  source_en: string;
+  source_fr: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  category: string;
+  word_count: number;
+}
+
+export interface NumberExercise {
+  id: number;
+  question: string;
+  answer: string;
+  type: 'digit_to_word' | 'word_to_digit' | 'ordinal' | 'time' | 'date' | 'large_number' | 'fraction' | 'percentage' | 'decimal' | 'mixed';
+  hint: string | null;
+  difficulty: 'easy' | 'medium' | 'hard';
+  category: string;
+}
+
