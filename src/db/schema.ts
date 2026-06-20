@@ -151,3 +151,12 @@ export interface NumberExercise {
   category: string;
 }
 
+export interface DictationSentence {
+  id: number;
+  text: string;
+  translation_fr: string | null;
+  difficulty: string;
+  category: string | null;
+  audio_url: string | null;
+  created_at: number;
+}

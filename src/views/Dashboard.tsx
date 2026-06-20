@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Plus, Brain, List, Shuffle, Languages, GraduationCap, Hash } from "lucide-react";
+import { BookOpen, Plus, Brain, List, Shuffle, Languages, GraduationCap, Hash, Mic } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { getDueCards, getStats } from "@/db/queries";
 import { DailyProgress } from "@/components/game/DailyProgress";
@@ -151,6 +151,16 @@ export function Dashboard() {
         >
           <Hash size={20} />
           Chiffres & Nombres
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setView("dictation")}
+          className="flex items-center gap-2 px-6 py-3 bg-rose-700 hover:bg-rose-600 rounded-xl font-semibold shadow-lg transition-colors"
+        >
+          <Mic size={20} />
+          Dictée
         </motion.button>
 
       </div>

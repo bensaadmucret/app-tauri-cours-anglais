@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress, LongTranslationExercise, ExtendedTranslationExercise, NumberExercise } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress, LongTranslationExercise, ExtendedTranslationExercise, NumberExercise, DictationSentence } from "./schema";
 
 let db: Database | null = null;
 
@@ -422,3 +422,24 @@ export async function getNumberExerciseTypes(): Promise<string[]> {
   return results.map((r) => r.type);
 }
 
+export async function getDictationSentences(count: number, difficulty?: string): Promise<DictationSentence[]> {
+  const db = await getDb();
+  if (difficulty) {
+    return db.select<DictationSentence[]>(
+      "SELECT * FROM dictation_sentences WHERE difficulty = ? ORDER BY RANDOM() LIMIT ?",
+      [difficulty, count]
+    );
+  }
+  return db.select<DictationSentence[]>(
+    "SELECT * FROM dictation_sentences ORDER BY RANDOM() LIMIT ?",
+    [count]
+  );
+}
+
+export async function getDictationDifficulties(): Promise<string[]> {
+  const db = await getDb();
+  const results = await db.select<{ difficulty: string }[]>(
+    "SELECT DISTINCT difficulty FROM dictation_sentences ORDER BY difficulty"
+  );
+  return results.map((r) => r.difficulty);
+}

@@ -128,6 +128,12 @@ fn main() {
                             sql: include_str!("../migrations/20_grammar_add_translations_86_110.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 21,
+                            description: "dictation sentences",
+                            sql: include_str!("../migrations/21_dictation_sentences.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

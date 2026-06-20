@@ -6,6 +6,11 @@ Application de bureau pour apprendre l'anglais, construite avec **Tauri** (Rust)
 
 - **Cartes de révision (Flashcards)** — Algorithme FSRS pour la mémorisation optimale
 - **Verbes irréguliers** — Mode apprentissage séquentiel, quiz aveugle et flashcards
+- **Phrasal Verbs** — Liste et apprentissage des verbes à particule
+- **Dictée** — Écoute de phrases en anglais et retranscription avec correction visuelle
+- **Grammaire** — 110 leçons théoriques avec traductions françaises et exercices
+- **Exercices de traduction** — Phrases courtes, longues et étendues à traduire
+- **Chiffres & Nombres** — Pratique des nombres en anglais (cardinaux, ordinaux, dates...)
 - **Synthèse vocale** — Écoute des prononciations directement dans l'app
 - **Progression XP** — Système de points pour suivre ton avancement
 - **Base de données SQLite locale** — Tout est stocké sur ton ordinateur
