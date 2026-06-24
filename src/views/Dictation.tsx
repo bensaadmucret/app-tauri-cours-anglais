@@ -61,12 +61,12 @@ export function Dictation() {
     }
   }
 
-  const speak = useCallback((text: string) => {
+  const speak = useCallback((text: string, slow = false) => {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "en-US";
-      u.rate = 0.85;
+      u.rate = slow ? 0.5 : 0.85;
       window.speechSynthesis.speak(u);
     }
   }, []);
@@ -97,7 +97,6 @@ export function Dictation() {
       setCurrentIdx((i) => i + 1);
       setInput("");
       setRevealed(false);
-      setShowTranslation(false);
     }
   }
 
@@ -274,13 +273,22 @@ export function Dictation() {
         animate={{ opacity: 1, y: 0 }}
         className="flex-1 flex flex-col items-center justify-center gap-6"
       >
-        <button
-          onClick={() => speak(current.text)}
-          className="flex items-center gap-2 px-6 py-3 bg-sky-600 hover:bg-sky-500 rounded-xl font-semibold transition-colors"
-        >
-          <Volume2 size={20} />
-          Écouter la phrase
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => speak(current.text)}
+            className="flex items-center gap-2 px-6 py-3 bg-sky-600 hover:bg-sky-500 rounded-xl font-semibold transition-colors"
+          >
+            <Volume2 size={20} />
+            Écouter
+          </button>
+          <button
+            onClick={() => speak(current.text, true)}
+            className="flex items-center gap-2 px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-medium transition-colors text-sm"
+          >
+            <Volume2 size={16} />
+            Lentement
+          </button>
+        </div>
 
         <div className="w-full max-w-lg">
           {!revealed ? (

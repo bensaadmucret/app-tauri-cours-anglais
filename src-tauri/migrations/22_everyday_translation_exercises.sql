@@ -1,0 +1,32 @@
+INSERT INTO translation_exercises (title, source, translation, difficulty, category, word_count) VALUES
+-- Voyage
+('À l''aéroport', 'Where is the check-in desk for flight AF847?', 'Où se trouve le comptoir d''enregistrement pour le vol AF847 ?', 'easy', 'voyage', 9),
+('À l''hôtel', 'I would like to book a room for two nights, please.', 'Je voudrais réserver une chambre pour deux nuits, s''il vous plaît.', 'easy', 'voyage', 11),
+('Demander son chemin', 'Excuse me, how do I get to the train station?', 'Excusez-moi, comment puis-je aller à la gare ?', 'easy', 'voyage', 10),
+('Au restaurant', 'Could I have the menu, please? I am ready to order.', 'Pourrais-je avoir le menu, s''il vous plaît ? Je suis prêt à commander.', 'easy', 'restaurant', 12),
+('Commander au restaurant', 'I will have the chicken with rice and a glass of water, please.', 'Je vais prendre le poulet avec du riz et un verre d''eau, s''il vous plaît.', 'easy', 'restaurant', 14),
+('L''addition', 'Could we have the bill, please? Do you accept credit cards?', 'Pourrions-nous avoir l''addition, s''il vous plaît ? Acceptez-vous les cartes de crédit ?', 'easy', 'restaurant', 12),
+('Au magasin', 'How much does this cost? Do you have it in a different size?', 'Combien ça coûte ? L''avez-vous dans une autre taille ?', 'easy', 'shopping', 12),
+('Acheter des vêtements', 'I am looking for a blue jacket. Can I try it on?', 'Je cherche une veste bleue. Puis-je l''essayer ?', 'easy', 'shopping', 12),
+('Au supermarché', 'Where can I find the milk and the bread?', 'Où puis-je trouver le lait et le pain ?', 'easy', 'shopping', 9),
+('Transport public', 'What time does the next bus to the city centre leave?', 'À quelle heure part le prochain bus pour le centre-ville ?', 'easy', 'transport', 11),
+('Acheter un billet', 'One ticket to London, please. How long is the journey?', 'Un billet pour Londres, s''il vous plaît. Combien de temps dure le trajet ?', 'easy', 'transport', 12),
+('Location de voiture', 'I would like to rent a car for three days. What do I need?', 'Je voudrais louer une voiture pour trois jours. De quoi ai-je besoin ?', 'easy', 'voyage', 14),
+-- Vie quotidienne
+('Se présenter', 'Hello, my name is Thomas. I am from France. I am twenty-five years old.', 'Bonjour, je m''appelle Thomas. Je viens de France. J''ai vingt-cinq ans.', 'easy', 'vie_quotidienne', 15),
+('Parler de sa famille', 'I have one sister and one brother. My sister is a doctor and my brother is a student.', 'J''ai une sœur et un frère. Ma sœur est médecin et mon frère est étudiant.', 'easy', 'vie_quotidienne', 17),
+('Parler de son travail', 'I work as a teacher in a primary school. I love my job because I like helping children.', 'Je travaille comme professeur dans une école primaire. J''aime mon travail parce que j''aime aider les enfants.', 'easy', 'vie_quotidienne', 19),
+('Décrire sa routine', 'Every morning I wake up at seven, I take a shower, and I eat breakfast before going to work.', 'Chaque matin je me lève à sept heures, je prends une douche et je prends mon petit-déjeuner avant d''aller au travail.', 'easy', 'vie_quotidienne', 19),
+('Loisirs', 'In my free time, I like reading books, watching movies, and playing football with my friends.', 'Pendant mon temps libre, j''aime lire des livres, regarder des films et jouer au football avec mes amis.', 'easy', 'vie_quotidienne', 17),
+('Météo', 'It is sunny today, but tomorrow it will rain. You should bring an umbrella.', 'Il fait soleil aujourd''hui, mais demain il pleuvra. Tu devrais prendre un parapluie.', 'easy', 'vie_quotidienne', 14),
+('Rendez-vous chez le médecin', 'I have a headache and a sore throat. I would like to see a doctor.', 'J''ai mal à la tête et mal à la gorge. Je voudrais voir un médecin.', 'easy', 'sante', 14),
+('Pharmacie', 'I need something for a cold. Do you have any medicine without a prescription?', 'J''ai besoin de quelque chose pour un rhume. Avez-vous des médicaments sans ordonnance ?', 'easy', 'sante', 15),
+-- Intermédiaire
+('Faire une réservation', 'I would like to reserve a table for four people at eight o''clock this evening. Is that possible?', 'Je voudrais réserver une table pour quatre personnes à huit heures ce soir. Est-ce possible ?', 'medium', 'restaurant', 18),
+('Réclamation à l''hôtel', 'The air conditioning in my room is not working, and the wifi connection is very slow. Could you fix it?', 'La climatisation de ma chambre ne fonctionne pas et la connexion wifi est très lente. Pourriez-vous la réparer ?', 'medium', 'voyage', 19),
+('Demande d''informations', 'Could you tell me where the nearest post office is? I need to send a package to France.', 'Pourriez-vous me dire où se trouve le bureau de poste le plus proche ? Je dois envoyer un colis en France.', 'medium', 'vie_quotidienne', 18),
+('Conversation téléphonique', 'Hello, I am calling about the job advertisement. Is the position still available?', 'Bonjour, j''appelle au sujet de l''annonce d''emploi. Le poste est-il toujours disponible ?', 'medium', 'vie_quotidienne', 15),
+('Au cinéma', 'Two tickets for the seven o''clock showing, please. Do you have seats in the back row?', 'Deux billets pour la séance de sept heures, s''il vous plaît. Avez-vous des places au dernier rang ?', 'medium', 'loisirs', 17),
+('Problème de livraison', 'I ordered a book online two weeks ago, but I still have not received it. Can you check the status?', 'J''ai commandé un livre en ligne il y a deux semaines, mais je ne l''ai toujours pas reçu. Pouvez-vous vérifier le statut ?', 'medium', 'shopping', 19),
+('Invitation', 'Would you like to come to my birthday party on Saturday? It starts at eight in the evening.', 'Veux-tu venir à ma fête d''anniversaire samedi ? Ça commence à huit heures du soir.', 'medium', 'vie_quotidienne', 17),
+('Demander un remboursement', 'I bought this shirt yesterday, but it is too small. Can I exchange it or get a refund?', 'J''ai acheté cette chemise hier, mais elle est trop petite. Puis-je l''échanger ou être remboursé ?', 'medium', 'shopping', 17);

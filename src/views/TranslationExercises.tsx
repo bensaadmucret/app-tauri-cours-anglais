@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Languages, CheckCircle, AlertCircle, Search, FileText, Star } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getTranslationExercises, getTranslationProgress, saveTranslationProgress, getExtendedTranslationExercises } from "@/db/queries";
-import type { TranslationExercise, TranslationProgress, ExtendedTranslationExercise } from "@/db/schema";
+import { getTranslationExercises, getTranslationProgress, saveTranslationProgress, getExtendedTranslationExercises, getLongTranslationExercises } from "@/db/queries";
+import type { TranslationExercise, TranslationProgress, ExtendedTranslationExercise, LongTranslationExercise } from "@/db/schema";
 
 export function TranslationExercises() {
   const setView = useLearnStore((s) => s.setView);
@@ -11,15 +11,17 @@ export function TranslationExercises() {
 
   const [exercises, setExercises] = useState<TranslationExercise[]>([]);
   const [longExercises, setLongExercises] = useState<ExtendedTranslationExercise[]>([]);
+  const [mediumExercises, setMediumExercises] = useState<LongTranslationExercise[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"short" | "long">("short");
-  const [mode, setMode] = useState<"list" | "exercise" | "result" | "long_exercise">("list");
+  const [tab, setTab] = useState<"short" | "medium" | "long">("short");
+  const [mode, setMode] = useState<"list" | "exercise" | "result" | "long_exercise" | "medium_exercise">("list");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [search, setSearch] = useState("");
 
   const [currentEx, setCurrentEx] = useState<TranslationExercise | null>(null);
   const [currentLong, setCurrentLong] = useState<ExtendedTranslationExercise | null>(null);
+  const [currentMedium, setCurrentMedium] = useState<LongTranslationExercise | null>(null);
   const [userTranslation, setUserTranslation] = useState("");
   const [score, setScore] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -32,17 +34,19 @@ export function TranslationExercises() {
   async function loadAll() {
     setLoading(true);
     try {
-      const [data, prog, long] = await Promise.all([
+      const [data, prog, long, medium] = await Promise.all([
         getTranslationExercises(
           difficultyFilter === "all" ? undefined : difficultyFilter,
           categoryFilter === "all" ? undefined : categoryFilter
         ),
         getTranslationProgress(),
         getExtendedTranslationExercises(),
+        getLongTranslationExercises(),
       ]);
       setExercises(data);
       setProgress(prog);
       setLongExercises(long);
+      setMediumExercises(medium);
     } finally {
       setLoading(false);
     }
@@ -61,9 +65,19 @@ export function TranslationExercises() {
   function startLongExercise(ex: ExtendedTranslationExercise) {
     setCurrentLong(ex);
     setCurrentEx(null);
+    setCurrentMedium(null);
     setUserTranslation("");
     setRevealed(false);
     setMode("long_exercise");
+  }
+
+  function startMediumExercise(ex: LongTranslationExercise) {
+    setCurrentMedium(ex);
+    setCurrentEx(null);
+    setCurrentLong(null);
+    setUserTranslation("");
+    setRevealed(false);
+    setMode("medium_exercise");
   }
 
   async function submitExercise() {
@@ -145,6 +159,14 @@ export function TranslationExercises() {
                 Exercices courts
               </button>
               <button
+                onClick={() => setTab("medium")}
+                className={`px-4 py-2 rounded-xl font-medium transition-colors ${
+                  tab === "medium" ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                Textes moyens ({mediumExercises.length})
+              </button>
+              <button
                 onClick={() => setTab("long")}
                 className={`px-4 py-2 rounded-xl font-medium transition-colors ${
                   tab === "long" ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
@@ -222,6 +244,36 @@ export function TranslationExercises() {
                   ))}
                 </div>
               </>
+            )}
+
+            {tab === "medium" && (
+              <div className="grid gap-3">
+                {mediumExercises.map((ex) => (
+                  <button
+                    key={ex.id}
+                    onClick={() => startMediumExercise(ex)}
+                    className="text-left bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-rose-500 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <FileText size={18} className="text-amber-400" />
+                          <span className="text-lg font-bold">{ex.title}</span>
+                        </div>
+                        <p className="text-sm text-slate-400 line-clamp-2">{ex.source}</p>
+                        <div className="flex gap-3 mt-2 text-xs">
+                          <span className={`font-medium ${difficultyColor(ex.difficulty)}`}>
+                            {difficultyLabel(ex.difficulty)}
+                          </span>
+                          <span className="text-slate-500 capitalize">{ex.category}</span>
+                          <span className="text-slate-500">{ex.word_count} mots</span>
+                        </div>
+                      </div>
+                      <Languages size={20} className="text-slate-500" />
+                    </div>
+                  </button>
+                ))}
+              </div>
             )}
 
             {tab === "long" && (
@@ -361,6 +413,92 @@ export function TranslationExercises() {
                 Réessayer
               </button>
             </div>
+          </motion.div>
+        )}
+
+        {mode === "medium_exercise" && currentMedium && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex items-center gap-4 mb-6">
+              <button
+                onClick={() => setMode("list")}
+                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <h2 className="text-xl font-bold">{currentMedium.title}</h2>
+              <div className="flex gap-2 text-sm ml-auto">
+                <span className={`px-2 py-1 rounded bg-slate-800 ${difficultyColor(currentMedium.difficulty)}`}>
+                  {difficultyLabel(currentMedium.difficulty)}
+                </span>
+                <span className="px-2 py-1 rounded bg-slate-800 text-slate-400 capitalize">
+                  {currentMedium.category}
+                </span>
+                <span className="px-2 py-1 rounded bg-slate-800 text-slate-400">
+                  {currentMedium.word_count} mots
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 mb-4">
+              <p className="text-sm text-slate-400 mb-1">Texte à traduire :</p>
+              <p className="text-lg leading-relaxed whitespace-pre-wrap">{currentMedium.source}</p>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-slate-400 mb-2">Ta traduction (français) :</p>
+              <textarea
+                value={userTranslation}
+                onChange={(e) => setUserTranslation(e.target.value)}
+                placeholder="Écris ta traduction ici..."
+                rows={10}
+                className="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:border-rose-500 resize-y"
+                autoFocus
+              />
+            </div>
+
+            {!revealed ? (
+              <div className="flex gap-3 mb-4">
+                <button
+                  onClick={() => setRevealed(true)}
+                  className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-semibold"
+                >
+                  <CheckCircle size={18} className="inline mr-1" />
+                  Voir la traduction de référence
+                </button>
+                <button
+                  onClick={() => setMode("list")}
+                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl"
+                >
+                  Abandonner
+                </button>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-emerald-900/30 border border-emerald-700/50 rounded-2xl p-6 mb-6"
+              >
+                <h3 className="text-emerald-400 font-semibold mb-2">Traduction de référence</h3>
+                <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{currentMedium.translation}</p>
+              </motion.div>
+            )}
+
+            {revealed && (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setMode("list")}
+                  className="px-6 py-3 bg-rose-600 hover:bg-rose-500 rounded-xl font-semibold"
+                >
+                  Terminer
+                </button>
+                <button
+                  onClick={() => startMediumExercise(currentMedium)}
+                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl"
+                >
+                  Réessayer
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
 
