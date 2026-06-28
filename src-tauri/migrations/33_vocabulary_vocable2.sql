@@ -1,0 +1,50 @@
+-- Vocabulary flashcards from Vocable Anglais Mars 2025 (pages 13-20)
+-- Themes: Music, Social Media, Conversation, Volunteering
+
+INSERT OR IGNORE INTO cards (deck_id, word, phonetic, definition, example, translation_fr) VALUES
+-- Music (Mars 2025, p13-15)
+(1, 'rhythm', '/ˈrɪðəm/', 'a regular, repeated pattern of sounds or movements', 'She moved to the rhythm of the music.', 'rythme'),
+(1, 'melody', '/ˈmelədi/', 'the main tune in a piece of music', 'The melody of this song is very catchy.', 'mélodie'),
+(1, 'harmony', '/ˈhɑːməni/', 'the combination of different musical notes played at the same time', 'They sing in perfect harmony.', 'harmonie'),
+(1, 'lyrics', '/ˈlɪrɪks/', 'the words of a song', 'I love the lyrics of this song.', 'paroles (d''une chanson)'),
+(1, 'genre', '/ˈʒɒnrə/', 'a particular type or style of music, art or literature', 'Jazz is my favourite music genre.', 'genre'),
+(1, 'composer', '/kəmˈpəʊzə/', 'someone who writes music', 'Mozart was a famous composer.', 'compositeur'),
+(1, 'perform', '/pəˈfɔːm/', 'to entertain an audience by playing music, acting, etc.', 'They will perform at the festival tonight.', 'se produire, interpréter'),
+(1, 'audience', '/ˈɔːdiəns/', 'the people who watch or listen to a performance', 'The audience cheered after the concert.', 'public, auditoire'),
+(1, 'instrument', '/ˈɪnstrəmənt/', 'an object used for producing music', 'She plays three different instruments.', 'instrument (de musique)'),
+(1, 'soundtrack', '/ˈsaʊndtræk/', 'the music used in a film or television programme', 'The soundtrack of the film won an award.', 'bande sonore'),
+(1, 'streaming', '/ˈstriːmɪŋ/', 'listening to or watching content directly from the internet', 'Streaming services have changed the music industry.', 'streaming (diffusion en ligne)'),
+(1, 'live concert', '/laɪv ˈkɒnsət/', 'a musical performance given in front of an audience', 'We went to a live concert last night.', 'concert en direct'),
+-- Social Media (Mars 2025, p16-17)
+(1, 'platform', '/ˈplætfɔːm/', 'a digital service that allows users to interact', 'Instagram is a popular social media platform.', 'plateforme'),
+(1, 'feed', '/fiːd/', 'the constantly updating list of posts on social media', 'I scrolled through my feed for an hour.', 'fil d''actualité'),
+(1, 'follower', '/ˈfɒləʊə/', 'someone who follows your social media account', 'She has thousands of followers on Instagram.', 'abonné'),
+(1, 'hashtag', '/ˈhæʃtæɡ/', 'a word or phrase preceded by # used on social media', 'Use the hashtag to join the conversation.', 'mot-dièse, hashtag'),
+(1, 'cyberbullying', '/ˈsaɪbəˌbʊliɪŋ/', 'bullying that takes place online', 'Cyberbullying is a growing problem in schools.', 'cyberharcèlement'),
+(1, 'screen time', '/skriːn taɪm/', 'the amount of time spent using devices with screens', 'Parents should limit their children''s screen time.', 'temps d''écran'),
+(1, 'influencer', '/ˈɪnfluənsə/', 'someone who affects others'' decisions through social media', 'She became an influencer with over a million followers.', 'influenceur'),
+(1, 'viral', '/ˈvaɪrəl/', 'spreading quickly and widely on the internet', 'The video went viral overnight.', 'viral (qui se propage rapidement)'),
+(1, 'privacy', '/ˈprɪvəsi/', 'the state of being free from public attention', 'We need to protect our online privacy.', 'vie privée, confidentialité'),
+(1, 'self-esteem', '/ˌself ɪˈstiːm/', 'confidence in one''s own worth or abilities', 'Social media can affect young people''s self-esteem.', 'estime de soi'),
+-- Conversation (Mars 2025, p18-19)
+(1, 'articulate', '/ɑːˈtɪkjələt/', 'able to express thoughts clearly and effectively', 'She is a very articulate speaker.', 'articulé, éloquent'),
+(1, 'attentive', '/əˈtentɪv/', 'paying close attention to something or someone', 'He was an attentive listener during the meeting.', 'attentif'),
+(1, 'engaging', '/ɪnˈɡeɪdʒɪŋ/', 'interesting and attractive, holding attention', 'Her presentation was very engaging.', 'captivant, engageant'),
+(1, 'gesture', '/ˈdʒestʃə/', 'a movement of the body to express an idea', 'He used hand gestures to emphasise his point.', 'geste'),
+(1, 'eye contact', '/aɪ ˈkɒntækt/', 'looking directly into someone''s eyes', 'Maintaining eye contact shows confidence.', 'contact visuel'),
+(1, 'interrupt', '/ˌɪntəˈrʌpt/', 'to stop someone from speaking', 'Please don''t interrupt me while I''m talking.', 'interrompre'),
+(1, 'fluent', '/ˈfluːənt/', 'able to speak a language smoothly and naturally', 'She is fluent in three languages.', 'courant (dans une langue)'),
+(1, 'small talk', '/smɔːl tɔːk/', 'polite conversation about unimportant topics', 'We made small talk while waiting for the meeting.', 'conversation de politesse'),
+(1, 'body language', '/ˈbɒdi ˈlæŋɡwɪdʒ/', 'communication through body movements and gestures', 'Her body language suggested she was nervous.', 'langage corporel'),
+(1, 'open-ended question', '/ˌəʊpənˈendɪd ˈkwestʃən/', 'a question that cannot be answered with yes or no', 'Ask open-ended questions to encourage discussion.', 'question ouverte'),
+-- Volunteering (Mars 2025, p20)
+(1, 'volunteer', '/ˌvɒlənˈtɪə/', 'to offer to do something without being paid', 'She volunteers at the animal shelter every weekend.', 'être bénévole, se porter volontaire'),
+(1, 'charity', '/ˈtʃærəti/', 'an organisation that helps people in need', 'He donated money to a local charity.', 'association caritative'),
+(1, 'community', '/kəˈmjuːnəti/', 'a group of people living in the same area', 'She is active in her local community.', 'communauté'),
+(1, 'donation', '/dəʊˈneɪʃən/', 'money or goods given to help others', 'They made a generous donation to the hospital.', 'don, donation'),
+(1, 'fundraiser', '/ˈfʌndˌreɪzə/', 'an event organised to collect money for a cause', 'The school organised a fundraiser for new equipment.', 'collecte de fonds'),
+(1, 'non-profit', '/nɒnˈprɒfɪt/', 'not aimed at making money', 'She works for a non-profit organisation.', 'à but non lucratif'),
+(1, 'outreach', '/ˈaʊtriːtʃ/', 'efforts to help people in a community', 'The charity does outreach work with homeless people.', 'action de proximité'),
+(1, 'mentor', '/ˈmentɔː/', 'an experienced person who guides someone', 'She was my mentor when I started my career.', 'mentor'),
+(1, 'contribute', '/kənˈtrɪbjuːt/', 'to give something to help achieve a goal', 'Everyone can contribute to society in their own way.', 'contribuer'),
+(1, 'make a difference', '/meɪk ə ˈdɪfrəns/', 'to have a positive effect on something', 'Volunteering allows you to make a difference.', 'faire la différence');

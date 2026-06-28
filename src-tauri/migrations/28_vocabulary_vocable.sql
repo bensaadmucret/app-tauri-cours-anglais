@@ -1,7 +1,7 @@
 -- Vocabulary flashcards from Vocable Anglais (Mars & Juillet 2025)
 -- Themes: Environment, Travel, Business, Technology
 
-INSERT INTO cards (deck_id, word, phonetic, definition, example, translation_fr) VALUES
+INSERT OR IGNORE INTO cards (deck_id, word, phonetic, definition, example, translation_fr) VALUES
 -- Deck: Environnement (deck_id = 1, Général)
 (1, 'sustainable', '/səˈsteɪnəbl/', 'that can be maintained over time without causing damage', 'We need to find sustainable sources of energy.', 'durable, soutenable'),
 (1, 'renewable', '/rɪˈnjuːəbl/', 'that can be replaced naturally', 'Renewable energy includes solar and wind power.', 'renouvelable'),

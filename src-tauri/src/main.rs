@@ -178,7 +178,7 @@ fn main() {
                         },
                         tauri_plugin_sql::Migration {
                             version: 29,
-                            description: "dictation sentences from Vocable (environment, technology, travel, business)",
+                            description: "dictation sentences from Vocable (technology, environment, work, fashion, sport, education, travel)",
                             sql: include_str!("../migrations/29_dictation_vocable.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
@@ -186,6 +186,24 @@ fn main() {
                             version: 30,
                             description: "translation exercises from Vocable articles",
                             sql: include_str!("../migrations/30_translation_vocable.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 31,
+                            description: "dictation sentences from Vocable Mars 2025 p13-20 (music, social media, conversation, volunteering)",
+                            sql: include_str!("../migrations/31_dictation_vocable2.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 32,
+                            description: "translation exercises from Vocable Mars 2025 p13-20",
+                            sql: include_str!("../migrations/32_translation_vocable2.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 33,
+                            description: "vocabulary flashcards from Vocable Mars 2025 p13-20 (music, social media, conversation, volunteering)",
+                            sql: include_str!("../migrations/33_vocabulary_vocable2.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
                     ],

@@ -1,5 +1,5 @@
 -- Phrasal Verbs from Vocable Anglais Mars 2025 (p10: Daily Life) & Juillet 2025 (p10: Travel & Movement)
-INSERT INTO phrasal_verbs (verb, particle, meaning, example, level) VALUES
+INSERT OR IGNORE INTO phrasal_verbs (verb, particle, meaning, example, level) VALUES
 -- Daily Life (Mars 2025, p10)
 ('wake', 'up', 'se réveiller', 'I wake up at seven every morning.', 'beginner'),
 ('get', 'up', 'se lever', 'She gets up early to go jogging.', 'beginner'),
