@@ -1,1 +1,0 @@
-{"default":{"identifier":"default","description":"Default capabilities for the app","local":true,"windows":["*"],"permissions":["sql:default","sql:allow-load","sql:allow-execute","sql:allow-select"]}}

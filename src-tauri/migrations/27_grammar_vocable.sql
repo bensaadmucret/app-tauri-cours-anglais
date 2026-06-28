@@ -1,0 +1,44 @@
+-- Grammar lessons from Vocable Anglais (Mars & Juillet 2025)
+-- Conditionals (Mars 2025), Reported Speech & Question Tags (Juillet 2025)
+
+INSERT INTO grammar_lessons (id, title, slug, description, content, category, level, order_index, created_at) VALUES
+(111, 'Les conditionnels - Type 0 et 1', 'vocable-conditionals-type-0-1', 'Les conditionnels type 0 et 1 expriment des faits et des situations probables.', '<h3>Conditional type 0 (fait général)</h3><p><b>If + present simple, present simple</b></p><ul><li><i>If you heat water to 100°C, it boils.</i></li><li><i>If it rains, the ground gets wet.</i></li></ul><h3>Conditional type 1 (situation probable)</h3><p><b>If + present simple, will + base verbale</b></p><ul><li><i>If it rains tomorrow, I will stay home.</i></li><li><i>If you study hard, you will pass the exam.</i></li></ul><h3>Astuce</h3><p>Le type 0 décrit des vérités scientifiques. Le type 1 décrit une situation réelle et possible dans le futur.</p>', 'conditionnel', 'A2', 111, 1718380800000),
+(112, 'Les conditionnels - Type 2', 'vocable-conditionals-type-2', 'Le conditionnel type 2 exprime une situation hypothétique ou peu probable au présent/futur.', '<h3>Formation</h3><p><b>If + past simple, would + base verbale</b></p><ul><li><i>If I won the lottery, I would travel the world.</i></li><li><i>If I were you, I would accept the job.</i></li></ul><h3>Astuce</h3><p>Avec <i>be</i>, on utilise <i>were</i> pour toutes les personnes : <i>If I were rich...</i></p><h3>Usage</h3><ul><li>Situation imaginaire au présent</li><li>Conseil : <i>If I were you, I would...</i></li></ul>', 'conditionnel', 'B1', 112, 1718380800000),
+(113, 'Les conditionnels - Type 3', 'vocable-conditionals-type-3', 'Le conditionnel type 3 exprime un regret sur une situation passée irréversible.', '<h3>Formation</h3><p><b>If + past perfect, would have + participe passé</b></p><ul><li><i>If I had studied, I would have passed the exam.</i></li><li><i>If she had left earlier, she would not have missed the train.</i></li></ul><h3>Usage</h3><ul><li>Regret sur le passé</li><li>Critique rétrospective</li></ul><h3>Astuce</h3><p>On ne peut pas changer le passé. Ce conditionnel sert à imaginer un autre résultat.</p>', 'conditionnel', 'B2', 113, 1718380800000),
+(114, 'Conditionnels mixtes', 'vocable-conditionals-mixed', 'Les conditionnels mixtes combinent différentes périodes temporelles.', '<h3>Mixte type 2/3</h3><p><b>If + past perfect, would + base verbale</b> (cause passée, effet présent)</p><ul><li><i>If I had saved money, I would be rich now.</i></li></ul><h3>Mixte type 3/2</h3><p><b>If + past simple, would have + participe passé</b> (cause permanente, effet passé)</p><ul><li><i>If I were more careful, I would not have broken the vase.</i></li></ul>', 'conditionnel', 'B2', 114, 1718380800000),
+(115, 'Reported Speech - Statements', 'vocable-reported-speech-statements', 'Le discours indirect transforme les paroles directes en paroles rapportées.', '<h3>Règle générale</h3><p><b>He said (that) + ...</b> avec recul d''un temps</p><h3>Transitions temporelles</h3><ul><li>Present simple → Past simple : <i>"I like tea" → He said he liked tea.</i></li><li>Present continuous → Past continuous : <i>"I am reading" → She said she was reading.</i></li><li>Past simple → Past perfect : <i>"I went" → He said he had gone.</i></li><li>Will → Would : <i>"I will come" → She said she would come.</i></li><li>Can → Could : <i>"I can swim" → He said he could swim.</i></li></ul><h3>Modifications temporelles</h3><ul><li>today → that day</li><li>tomorrow → the next day</li><li>yesterday → the day before</li><li>here → there</li></ul>', 'discours_indirect', 'B1', 115, 1718380800000),
+(116, 'Reported Speech - Questions et Commands', 'vocable-reported-speech-questions', 'Le discours indirect pour les questions et les ordres.', '<h3>Questions fermées</h3><p><b>He asked if/whether + sujet + verbe</b></p><ul><li><i>"Are you tired?" → He asked if I was tired.</i></li></ul><h3>Questions ouvertes</h3><p><b>He asked + mot interrogatif + sujet + verbe</b></p><ul><li><i>"Where do you live?" → She asked where I lived.</i></li></ul><h3>Ordres et demandes</h3><p><b>He told me to + base verbale</b></p><ul><li><i>"Close the door." → He told me to close the door.</i></li><li><i>"Please help me." → She asked me to help her.</i></li></ul>', 'discours_indirect', 'B2', 116, 1718380800000),
+(117, 'Question Tags', 'vocable-question-tags', 'Les question tags sont de petites questions ajoutées en fin de phrase pour confirmer.', '<h3>Règle générale</h3><p><b>Affirmatif → Négatif</b> et <b>Négatif → Affirmatif</b></p><ul><li><i>You are French, aren''t you?</i></li><li><i>She doesn''t like tea, does she?</i></li><li><i>They have arrived, haven''t they?</i></li></ul><h3>Cas particuliers</h3><ul><li><i>I am → aren''t I?</i> : I am late, aren''t I?</li><li><i>Let''s → shall we?</i> : Let''s go, shall we?</li><li><i>Imperative → will you?</i> : Open the door, will you?</li><li><i>Negative words (never, hardly) → tag positif</i> : He never lies, does he?</li></ul>', 'structure', 'A2', 117, 1718380800000);
+
+-- Exercises for lessons 111-117
+INSERT INTO grammar_exercises (lesson_id, type, question, options, correct_answer, explanation, points, order_index) VALUES
+-- Lesson 111: Conditionals type 0 and 1
+(111, 'qcm', 'If you ___ water to 100°C, it boils.', '["heat", "heated", "will heat", "would heat"]', 'heat', 'Type 0 → présent simple dans les deux parties', 1, 1),
+(111, 'fill_blank', 'If it rains tomorrow, I ___ (stay) at home.', NULL, 'will stay', 'Type 1 → will + base verbale', 1, 2),
+(111, 'qcm', 'If you ___ hard, you will pass the exam.', '["study", "studied", "will study", "would study"]', 'study', 'Type 1 → présent simple après if', 1, 3),
+-- Lesson 112: Conditional type 2
+(112, 'qcm', 'If I ___ the lottery, I would travel the world.', '["win", "won", "will win", "had won"]', 'won', 'Type 2 → past simple après if', 1, 1),
+(112, 'fill_blank', 'If I ___ (be) you, I would accept the job.', NULL, 'were', 'Type 2 → were pour toutes les personnes avec be', 1, 2),
+(112, 'qcm', 'If she ___ richer, she would buy a house.', '["is", "was", "were", "will be"]', 'were', 'Type 2 → were (hypothétique)', 1, 3),
+-- Lesson 113: Conditional type 3
+(113, 'qcm', 'If I ___ studied, I would have passed.', '["had", "have", "would", "did"]', 'had', 'Type 3 → past perfect après if', 1, 1),
+(113, 'fill_blank', 'If she had left earlier, she ___ (not/miss) the train.', NULL, 'would not have missed', 'Type 3 → would have + participe passé', 1, 2),
+(113, 'qcm', 'If they ___ harder, they would have won.', '["trained", "had trained", "would train", "train"]', 'had trained', 'Type 3 → past perfect', 1, 3),
+-- Lesson 114: Mixed conditionals
+(114, 'qcm', 'If I had saved money, I ___ rich now.', '["would be", "would have been", "will be", "am"]', 'would be', 'Mixte 2/3 → cause passée, effet présent', 1, 1),
+(114, 'fill_blank', 'If I were more careful, I ___ (not/break) the vase.', NULL, 'would not have broken', 'Mixte 3/2 → condition permanente, effet passé', 1, 2),
+(114, 'qcm', 'If he ___ harder at school, he would have a better job now.', '["studied", "had studied", "studies", "would study"]', 'had studied', 'Mixte 2/3 → cause passée, effet présent', 1, 3),
+-- Lesson 115: Reported speech - statements
+(115, 'qcm', '"I like tea." → He said he ___ tea.', '["like", "liked", "likes", "had liked"]', 'liked', 'Present simple → past simple', 1, 1),
+(115, 'fill_blank', '"I will come." → She said she ___ (come).', NULL, 'would come', 'Will → would', 1, 2),
+(115, 'qcm', '"I went to Paris." → He said he ___ to Paris.', '["went", "had gone", "goes", "would go"]', 'had gone', 'Past simple → past perfect', 1, 3),
+-- Lesson 116: Reported speech - questions and commands
+(116, 'qcm', '"Are you tired?" → He asked ___ I was tired.', '["that", "if", "what", "why"]', 'if', 'Question fermée → if/whether', 1, 1),
+(116, 'fill_blank', '"Where do you live?" → She asked where I ___ (live).', NULL, 'lived', 'Question ouverte → mot interrogatif + ordre affirmatif', 1, 2),
+(116, 'qcm', '"Close the door." → He told me ___ the door.', '["closing", "to close", "close", "closed"]', 'to close', 'Ordre → told + to + base verbale', 1, 3),
+-- Lesson 117: Question tags
+(117, 'qcm', 'You are French, ___?', '["are you", "aren''t you", "do you", "don''t you"]', 'aren''t you', 'Affirmatif → tag négatif', 1, 1),
+(117, 'fill_blank', 'She doesn''t like tea, ___?', NULL, 'does she', 'Négatif → tag affirmatif', 1, 2),
+(117, 'qcm', 'I am late, ___?', '["am not I", "aren''t I", "don''t I", "isn''t it"]', 'aren''t I', 'I am → aren''t I (cas particulier)', 1, 3),
+(117, 'qcm', 'Let''s go, ___?', '["will we", "shall we", "don''t we", "aren''t we"]', 'shall we', 'Let''s → shall we', 1, 4),
+(117, 'qcm', 'He never lies, ___?', '["does he", "doesn''t he", "isn''t he", "won''t he"]', 'does he', 'Never (négatif) → tag affirmatif', 1, 5);

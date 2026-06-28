@@ -1,9 +1,0 @@
-/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/utf8-6af5cea65b051ad2.d: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lossy.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/read.rs
-
-/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/libutf8-6af5cea65b051ad2.rlib: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lossy.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/read.rs
-
-/Users/bensaadmohammed/Documents/Dev/mon-prof/cours-anglais/src-tauri/target/debug/deps/libutf8-6af5cea65b051ad2.rmeta: /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lib.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lossy.rs /Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/read.rs
-
-/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lib.rs:
-/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/lossy.rs:
-/Users/bensaadmohammed/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/utf-8-0.7.6/src/read.rs:
