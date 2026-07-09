@@ -34,6 +34,8 @@ export function Grammar() {
   const [currentExIndex, setCurrentExIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [matchSelectedLeft, setMatchSelectedLeft] = useState<string | null>(null);
+  const [matchPairs, setMatchPairs] = useState<Record<string, string>>({});
   const [score, setScore] = useState(0);
   const [levelFilter, setLevelFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -89,6 +91,8 @@ export function Grammar() {
     setScore(0);
     setSelectedAnswer(null);
     setShowFeedback(false);
+    setMatchSelectedLeft(null);
+    setMatchPairs({});
     setMode("exercise");
   }
 
@@ -107,6 +111,8 @@ export function Grammar() {
       setCurrentExIndex((i) => i + 1);
       setSelectedAnswer(null);
       setShowFeedback(false);
+      setMatchSelectedLeft(null);
+      setMatchPairs({});
     } else {
       // Finished
       if (currentLesson) {
@@ -360,6 +366,132 @@ export function Grammar() {
                 )}
               </div>
             )}
+
+            {currentEx.type === "reorder" && currentEx.options && (
+              <div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {JSON.parse(currentEx.options)
+                    .filter((w: string) => !(selectedAnswer ?? "").split(" ").includes(w))
+                    .map((word: string, i: number) => (
+                      <button
+                        key={`${word}-${i}`}
+                        onClick={() => setSelectedAnswer(prev => prev ? `${prev} ${word}` : word)}
+                        disabled={showFeedback}
+                        className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg hover:bg-slate-600 hover:border-emerald-500 transition-colors"
+                      >
+                        {word}
+                      </button>
+                    ))}
+                </div>
+                <div className="min-h-[60px] bg-slate-900 border border-slate-600 rounded-lg p-3 mb-3">
+                  {selectedAnswer ? (
+                    <p className="text-slate-200">{selectedAnswer}</p>
+                  ) : (
+                    <p className="text-slate-500 italic">Cliquez sur les mots dans l'ordre...</p>
+                  )}
+                </div>
+                {!showFeedback && selectedAnswer && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setSelectedAnswer(null)}
+                      className="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm"
+                    >
+                      ↺ Réinitialiser
+                    </button>
+                    <button
+                      onClick={() => handleAnswer(selectedAnswer)}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm"
+                    >
+                      Valider
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {currentEx.type === "match" && currentEx.options && (() => {
+              const opts = JSON.parse(currentEx.options);
+              const leftItems: string[] = opts.left;
+              const rightItems: string[] = opts.right;
+              const allMatched = Object.keys(matchPairs).length === leftItems.length;
+              const buildAnswer = () =>
+                Object.entries(matchPairs)
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([k, v]) => `${k}=${v}`)
+                  .join("|");
+              return (
+                <div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <p className="text-xs text-slate-500 mb-1">Anglais</p>
+                      {leftItems.map((item) => (
+                        <button
+                          key={item}
+                          onClick={() => !showFeedback && setMatchSelectedLeft(item)}
+                          disabled={showFeedback || !!matchPairs[item]}
+                          className={`w-full px-3 py-2 rounded-lg border transition-colors text-sm ${
+                            matchPairs[item]
+                              ? "bg-emerald-900/30 border-emerald-700 text-slate-400 line-through"
+                              : matchSelectedLeft === item
+                              ? "bg-emerald-600 border-emerald-500 text-white"
+                              : "bg-slate-700 border-slate-600 hover:bg-slate-600"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xs text-slate-500 mb-1">Français</p>
+                      {rightItems.map((item) => {
+                        const matchedWith = Object.entries(matchPairs).find(([, v]) => v === item);
+                        return (
+                          <button
+                            key={item}
+                            onClick={() => {
+                              if (!showFeedback && matchSelectedLeft && !matchedWith) {
+                                setMatchPairs(prev => ({ ...prev, [matchSelectedLeft]: item }));
+                                setMatchSelectedLeft(null);
+                              }
+                            }}
+                            disabled={showFeedback || !!matchedWith || !matchSelectedLeft}
+                            className={`w-full px-3 py-2 rounded-lg border transition-colors text-sm ${
+                              matchedWith
+                                ? "bg-emerald-900/30 border-emerald-700 text-slate-400"
+                                : matchSelectedLeft
+                                ? "bg-slate-700 border-slate-600 hover:bg-slate-600 hover:border-emerald-500 cursor-pointer"
+                                : "bg-slate-700 border-slate-600 opacity-50 cursor-not-allowed"
+                            }`}
+                          >
+                            {item}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {!showFeedback && (
+                    <div className="flex gap-2">
+                      {Object.keys(matchPairs).length > 0 && (
+                        <button
+                          onClick={() => { setMatchPairs({}); setMatchSelectedLeft(null); }}
+                          className="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm"
+                        >
+                          ↺ Réinitialiser
+                        </button>
+                      )}
+                      {allMatched && (
+                        <button
+                          onClick={() => handleAnswer(buildAnswer())}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm"
+                        >
+                          Valider
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           <AnimatePresence>
@@ -388,7 +520,13 @@ export function Grammar() {
                 </div>
                 {!selectedAnswer?.trim().toLowerCase().includes(currentEx.correct_answer.trim().toLowerCase()) && (
                   <p className="text-sm text-slate-300 mb-1">
-                    Réponse : <span className="text-emerald-400 font-semibold">{currentEx.correct_answer}</span>
+                    Réponse : <span className="text-emerald-400 font-semibold">
+                      {currentEx.type === "match"
+                        ? currentEx.correct_answer.split("|").map((p, i) => (
+                            <span key={i}>{i > 0 && "  |  "}{p.replace("=", " → ")}</span>
+                          ))
+                        : currentEx.correct_answer}
+                    </span>
                   </p>
                 )}
                 {currentEx.explanation && (
