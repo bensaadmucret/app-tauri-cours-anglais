@@ -254,6 +254,18 @@ fn main() {
                             sql: include_str!("../migrations/41_grammar_exercises_bescherelle2.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 42,
+                            description: "turnover HR meaning",
+                            sql: include_str!("../migrations/42_turnover_hr_meaning.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 43,
+                            description: "merge turnover definitions on one card",
+                            sql: include_str!("../migrations/43_turnover_merge.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),
