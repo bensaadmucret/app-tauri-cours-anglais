@@ -272,6 +272,12 @@ fn main() {
                             sql: include_str!("../migrations/44_rush_definition.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 45,
+                            description: "fix channel definition",
+                            sql: include_str!("../migrations/45_channel_definition.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),
