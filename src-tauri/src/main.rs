@@ -266,6 +266,12 @@ fn main() {
                             sql: include_str!("../migrations/43_turnover_merge.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 44,
+                            description: "fix rush definition",
+                            sql: include_str!("../migrations/44_rush_definition.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),
