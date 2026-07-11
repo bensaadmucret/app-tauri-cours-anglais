@@ -278,6 +278,36 @@ fn main() {
                             sql: include_str!("../migrations/45_channel_definition.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 46,
+                            description: "vocabulary flashcards from Vocable Juin 2025 (environment, business, travel, idioms, health, society, science)",
+                            sql: include_str!("../migrations/46_vocabulary_vocable4.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 47,
+                            description: "grammar lessons from Vocable Juin 2025 (passive voice, modal verbs of deduction, future perfect & continuous)",
+                            sql: include_str!("../migrations/47_grammar_vocable4.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 48,
+                            description: "dictation sentences from Vocable Juin 2025 (AI, green energy, remote work, mental health, public transport, cultural heritage, space economy)",
+                            sql: include_str!("../migrations/48_dictation_vocable4.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 49,
+                            description: "translation exercises from Vocable Juin 2025 articles",
+                            sql: include_str!("../migrations/49_translation_vocable4.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
+                        tauri_plugin_sql::Migration {
+                            version: 50,
+                            description: "clear translation_fr for rush",
+                            sql: include_str!("../migrations/50_rush_translation_fr_null.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),
