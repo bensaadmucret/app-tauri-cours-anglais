@@ -29,6 +29,8 @@ export async function initDatabase(): Promise<void> {
       definition TEXT NOT NULL,
       example TEXT,
       audio_url TEXT,
+      translation_fr TEXT,
+      tags TEXT,
       due INTEGER NOT NULL DEFAULT 0,
       stability REAL NOT NULL DEFAULT 0,
       difficulty REAL NOT NULL DEFAULT 0,
@@ -64,6 +66,13 @@ export async function initDatabase(): Promise<void> {
       [Math.floor(Date.now() / 1000)]
     );
   }
+
+  // Migration: add tags column if it doesn't exist
+  try {
+    await db.execute("ALTER TABLE cards ADD COLUMN tags TEXT");
+  } catch {
+    // Column already exists
+  }
 }
 
 export async function getDecks(): Promise<Deck[]> {
@@ -95,8 +104,8 @@ export async function getCardById(id: number): Promise<Card | null> {
 export async function insertCard(card: CardInput): Promise<number> {
   const db = await getDb();
   const result = await db.execute(
-    `INSERT INTO cards (deck_id, word, phonetic, definition, example, audio_url, translation_fr) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [card.deck_id, card.word, card.phonetic, card.definition, card.example, card.audio_url, card.translation_fr ?? null]
+    `INSERT INTO cards (deck_id, word, phonetic, definition, example, audio_url, translation_fr, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [card.deck_id, card.word, card.phonetic, card.definition, card.example, card.audio_url, card.translation_fr ?? null, card.tags ?? null]
   );
   return result.lastInsertId ?? 0;
 }
@@ -442,4 +451,116 @@ export async function getDictationDifficulties(): Promise<string[]> {
     "SELECT DISTINCT difficulty FROM dictation_sentences ORDER BY difficulty"
   );
   return results.map((r) => r.difficulty);
+}
+
+export async function getReviewHistory(days: number): Promise<{ date: string; count: number; avg_rating: number }[]> {
+  const db = await getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const start = now - days * 86400;
+  return db.select<{ date: string; count: number; avg_rating: number }[]>(
+    `SELECT strftime('%Y-%m-%d', review, 'unixepoch') as date, COUNT(*) as count, AVG(rating) as avg_rating FROM review_logs WHERE review >= ? GROUP BY date ORDER BY date ASC`,
+    [start]
+  );
+}
+
+export async function getRetentionRate(): Promise<{ retention: number; totalReviews: number; againCount: number }> {
+  const db = await getDb();
+  const results = await db.select<{ total: number; again: number }[]>(
+    "SELECT COUNT(*) as total, SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as again FROM review_logs"
+  );
+  const total = results[0]?.total ?? 0;
+  const again = results[0]?.again ?? 0;
+  return {
+    retention: total > 0 ? Math.round(((total - again) / total) * 100) : 0,
+    totalReviews: total,
+    againCount: again,
+  };
+}
+
+export async function getActivityHeatmap(days: number): Promise<{ date: string; count: number }[]> {
+  const db = await getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const start = now - days * 86400;
+  return db.select<{ date: string; count: number }[]>(
+    `SELECT strftime('%Y-%m-%d', review, 'unixepoch') as date, COUNT(*) as count FROM review_logs WHERE review >= ? GROUP BY date ORDER BY date ASC`,
+    [start]
+  );
+}
+
+export async function getAllCards(): Promise<Card[]> {
+  const db = await getDb();
+  return db.select<Card[]>("SELECT * FROM cards ORDER BY created_at DESC");
+}
+
+export async function getCardsByTag(tag: string): Promise<Card[]> {
+  const db = await getDb();
+  return db.select<Card[]>(
+    "SELECT * FROM cards WHERE tags LIKE ? ORDER BY created_at DESC",
+    [`%${tag}%`]
+  );
+}
+
+export async function getAllTags(): Promise<string[]> {
+  const db = await getDb();
+  const results = await db.select<{ tags: string | null }[]>(
+    "SELECT DISTINCT tags FROM cards WHERE tags IS NOT NULL AND tags != ''"
+  );
+  const tagSet = new Set<string>();
+  results.forEach((r) => {
+    if (r.tags) {
+      r.tags.split(",").forEach((t) => tagSet.add(t.trim().toLowerCase()));
+    }
+  });
+  return Array.from(tagSet).sort();
+}
+
+export async function updateCardTags(cardId: number, tags: string): Promise<void> {
+  const db = await getDb();
+  await db.execute("UPDATE cards SET tags = ? WHERE id = ?", [tags, cardId]);
+}
+
+export async function deleteCard(id: number): Promise<void> {
+  const db = await getDb();
+  await db.execute("DELETE FROM cards WHERE id = ?", [id]);
+  await db.execute("DELETE FROM review_logs WHERE card_id = ?", [id]);
+}
+
+export async function searchAll(query: string): Promise<{ type: string; id: number; label: string; sublabel: string }[]> {
+  const db = await getDb();
+  const q = `%${query.toLowerCase()}%`;
+  const results: { type: string; id: number; label: string; sublabel: string }[] = [];
+
+  const cards = await db.select<{ id: number; word: string; definition: string }[]>(
+    "SELECT id, word, definition FROM cards WHERE LOWER(word) LIKE ? OR LOWER(definition) LIKE ? LIMIT 10",
+    [q, q]
+  );
+  cards.forEach((c) => results.push({ type: "card", id: c.id, label: c.word, sublabel: c.definition.slice(0, 60) }));
+
+  const verbs = await db.select<{ id: number; base: string; meaning: string }[]>(
+    "SELECT id, base, meaning FROM irregular_verbs WHERE LOWER(base) LIKE ? OR LOWER(meaning) LIKE ? LIMIT 10",
+    [q, q]
+  );
+  verbs.forEach((v) => results.push({ type: "verb", id: v.id, label: v.base, sublabel: v.meaning }));
+
+  const lessons = await db.select<{ id: number; title: string; category: string }[]>(
+    "SELECT id, title, category FROM grammar_lessons WHERE LOWER(title) LIKE ? OR LOWER(category) LIKE ? LIMIT 10",
+    [q, q]
+  );
+  lessons.forEach((l) => results.push({ type: "lesson", id: l.id, label: l.title, sublabel: l.category }));
+
+  return results;
+}
+
+export async function backupDatabase(): Promise<string> {
+  const db = await getDb();
+  const result = await db.select<{ backup_path: string }[]>(
+    "SELECT file_path FROM pragma_database_list WHERE name = 'main'"
+  );
+  const dbPath = result[0]?.backup_path;
+  if (!dbPath) throw new Error("Cannot determine database path");
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const backupPath = dbPath.replace(/\.db$/, `-backup-${timestamp}.db`);
+  await db.execute(`VACUUM INTO '${backupPath}'`);
+  return backupPath;
 }

@@ -1,18 +1,21 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, X, Check, RotateCcw, Zap, Trophy, Mic, MicOff } from "lucide-react";
+import { ArrowLeft, X, Check, RotateCcw, Zap, Trophy, Mic, MicOff, Brain } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { Flashcard } from "@/components/game/Flashcard";
 import { ShadowingMic } from "@/components/game/ShadowingMic";
 import { DailyProgress } from "@/components/game/DailyProgress";
 import { updateCardFsrs, insertReviewLog } from "@/db/queries";
 import { rateCard, Rating } from "@/services/fsrs/scheduler";
+import { useSoundFeedback } from "@/hooks/useSoundFeedback";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 export function StudySession() {
-  const { setView, currentCard, nextCard, addXp, xp, dailyGoal, sessionComplete } =
+  const { setView, currentCard, nextCard, addXp, xp, dailyGoal, sessionComplete, cramMode, setCramMode } =
     useLearnStore();
   const [shake, setShake] = useState(false);
   const [showShadowing, setShowShadowing] = useState(true);
+  const { play } = useSoundFeedback();
 
   const handleRate = useCallback(
     async (rating: Rating) => {
@@ -25,13 +28,24 @@ export function StudySession() {
       if (rating === Rating.Again) {
         setShake(true);
         setTimeout(() => setShake(false), 500);
+        play("error");
+      } else {
+        play("success");
       }
 
       addXp(rating === Rating.Easy ? 15 : rating === Rating.Good ? 10 : rating === Rating.Hard ? 5 : 1);
       nextCard();
     },
-    [currentCard, nextCard, addXp]
+    [currentCard, nextCard, addXp, play]
   );
+
+  useKeyboardShortcuts({
+    "1": () => handleRate(Rating.Again),
+    "2": () => handleRate(Rating.Hard),
+    "3": () => handleRate(Rating.Good),
+    "4": () => handleRate(Rating.Easy),
+    "Escape": () => setView("dashboard"),
+  }, [currentCard, handleRate]);
 
   if (sessionComplete) {
     return (
@@ -76,6 +90,15 @@ export function StudySession() {
         >
           <ArrowLeft size={20} />
           Quitter
+        </button>
+        <button
+          onClick={() => setCramMode(!cramMode)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            cramMode ? "bg-violet-500/20 text-violet-400" : "bg-slate-700 text-slate-400 hover:bg-slate-600"
+          }`}
+        >
+          <Brain size={16} />
+          Cram
         </button>
         <div className="flex items-center gap-3">
           <button

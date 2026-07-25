@@ -20,7 +20,7 @@
       }
     ],
     "security": {
-      "csp": null,
+      "csp": "default-src 'self'; img-src 'self' data: https:; media-src 'self' https://api.dictionaryapi.dev; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.dictionaryapi.dev https://api.mymemory.translated.net https://lexin.nada.kth.se; font-src 'self' data:",
       "capabilities": ["default"]
     }
   },

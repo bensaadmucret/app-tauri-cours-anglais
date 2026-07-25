@@ -14,6 +14,7 @@ export interface Card {
   example: string | null;
   audio_url: string | null;
   translation_fr: string | null;
+  tags: string | null;
   due: number;
   stability: number;
   difficulty: number;
@@ -43,6 +44,7 @@ export interface ReviewLog {
 
 export type CardInput = Omit<Card, "id" | "created_at" | "due" | "stability" | "difficulty" | "elapsed_days" | "scheduled_days" | "reps" | "lapses" | "state" | "last_review"> & {
   translation_fr?: string | null;
+  tags?: string | null;
 };
 
 export interface IrregularVerb {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Search, Loader2 } from "lucide-react";
+import { ArrowLeft, Search, Loader2, Tag } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
 import { fetchWord } from "@/services/dictionary/api";
 import { insertCard } from "@/db/queries";
@@ -12,6 +12,7 @@ export function CardBuilder() {
   const [loading, setLoading] = useState(false);
   const [entry, setEntry] = useState<DictionaryEntry | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [tags, setTags] = useState("");
 
   async function search() {
     if (!word.trim()) return;
@@ -36,16 +37,18 @@ export function CardBuilder() {
     if (!entry) return;
     try {
       await insertCard({
-        deck_id: 1, // deck par défaut
+        deck_id: 1,
         word: entry.word,
         phonetic: entry.phonetic || null,
         definition: entry.definition,
         example: entry.example || null,
         audio_url: entry.audio || null,
         translation_fr: entry.translation || null,
+        tags: tags.trim() || null,
       });
       setEntry(null);
       setWord("");
+      setTags("");
       setView("dashboard");
     } catch (e) {
       setError("Erreur lors de la sauvegarde.");
@@ -125,6 +128,19 @@ export function CardBuilder() {
           {entry.audio && (
             <audio className="w-full mb-4" controls src={entry.audio} />
           )}
+          <div className="mb-4">
+            <label className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+              <Tag size={16} />
+              Tags (séparés par des virgules)
+            </label>
+            <input
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="ex: vocabulaire, voyage, business"
+              className="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-sky-500"
+            />
+          </div>
           <button
             onClick={saveCard}
             className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 rounded-xl font-semibold shadow transition-colors"

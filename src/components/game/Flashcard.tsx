@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Volume2, RotateCcw } from "lucide-react";
 import type { Card } from "@/db/schema";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
@@ -11,6 +11,23 @@ interface FlashcardProps {
 export function Flashcard({ card }: FlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   const { speak, isSpeaking } = useTextToSpeech();
+
+  useEffect(() => {
+    setFlipped(false);
+  }, [card.id]);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        setFlipped((f) => !f);
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   return (
     <div className="perspective-1000 w-full max-w-md mx-auto">
@@ -41,6 +58,15 @@ export function Flashcard({ card }: FlashcardProps) {
             <RotateCcw size={14} />
             Cliquez pour retourner
           </div>
+          {card.tags && (
+            <div className="mt-3 flex flex-wrap gap-1 justify-center">
+              {card.tags.split(",").map((tag) => (
+                <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-400">
+                  {tag.trim()}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Back */}
