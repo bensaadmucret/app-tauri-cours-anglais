@@ -56,7 +56,7 @@ export function CardBuilder() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col p-6 max-w-2xl mx-auto">
+    <div className="min-h-full flex flex-col p-6 max-w-2xl mx-auto">
       <button
         onClick={() => setView("dashboard")}
         className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors mb-6"
@@ -74,7 +74,7 @@ export function CardBuilder() {
           onChange={(e) => setWord(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && search()}
           placeholder="Tapez un mot en anglais..."
-          className="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors"
+          className="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors"
         />
         <motion.button
           whileTap={{ scale: 0.95 }}

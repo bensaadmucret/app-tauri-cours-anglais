@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, TrendingUp, Target, Flame, Brain, BookOpen, CheckCircle } from "lucide-react";
-import { getStats, getReviewHistory, getRetentionRate, getActivityHeatmap } from "@/db/queries";
+import { useStats, useReviewHistory, useRetentionRate, useActivityHeatmap } from "@/hooks/useQueries";
 import { useLearnStore } from "@/store/useLearnStore";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
@@ -11,38 +10,16 @@ export function Stats() {
   const streak = useLearnStore((s) => s.streak);
   const xp = useLearnStore((s) => s.xp);
   const dailyGoal = useLearnStore((s) => s.dailyGoal);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState({ totalCards: 0, dueCards: 0, reviewedToday: 0 });
-  const [history, setHistory] = useState<{ date: string; count: number; avg_rating: number }[]>([]);
-  const [retention, setRetention] = useState({ retention: 0, totalReviews: 0, againCount: 0 });
-  const [heatmap, setHeatmap] = useState<{ date: string; count: number }[]>([]);
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [s, h, r, hm] = await Promise.all([
-          getStats(),
-          getReviewHistory(30),
-          getRetentionRate(),
-          getActivityHeatmap(84),
-        ]);
-        setStats(s);
-        setHistory(h);
-        setRetention(r);
-        setHeatmap(hm);
-      } catch (e: any) {
-        setError(e?.message || "Erreur de chargement");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
+  const { data: stats, isLoading: loading, error } = useStats();
+  const { data: history = [] } = useReviewHistory(30);
+  const { data: retention = { retention: 0, totalReviews: 0, againCount: 0 } } = useRetentionRate();
+  const { data: heatmap = [] } = useActivityHeatmap(84);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage message={error} />;
+  if (error) return <ErrorMessage message={error.message} />;
 
+  const statsData = stats ?? { totalCards: 0, dueCards: 0, reviewedToday: 0 };
   const maxCount = Math.max(...history.map((h) => h.count), 1);
 
   return (
@@ -57,7 +34,7 @@ export function Stats() {
         <StatBox icon={<Flame size={20} />} label="Série" value={`${streak}j`} color="text-orange-400" />
         <StatBox icon={<Target size={20} />} label="XP aujourd'hui" value={`${xp}`} color="text-emerald-400" />
         <StatBox icon={<Brain size={20} />} label="Rétention" value={`${retention.retention}%`} color="text-sky-400" />
-        <StatBox icon={<BookOpen size={20} />} label="Total cartes" value={`${stats.totalCards}`} color="text-violet-400" />
+        <StatBox icon={<BookOpen size={20} />} label="Total cartes" value={`${statsData.totalCards}`} color="text-violet-400" />
       </div>
 
       {/* Review history chart */}
@@ -124,8 +101,8 @@ export function Stats() {
         <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
           <h3 className="font-bold mb-3">Détails des révisions</h3>
           <div className="space-y-2 text-sm">
-            <Row label="Révisions aujourd'hui" value={stats.reviewedToday} />
-            <Row label="Cartes à réviser" value={stats.dueCards} />
+            <Row label="Révisions aujourd'hui" value={statsData.reviewedToday} />
+            <Row label="Cartes à réviser" value={statsData.dueCards} />
             <Row label="Total révisions" value={retention.totalReviews} />
             <Row label="Cartes oubliées" value={retention.againCount} />
           </div>

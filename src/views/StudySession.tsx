@@ -15,15 +15,23 @@ export function StudySession() {
     useLearnStore();
   const [shake, setShake] = useState(false);
   const [showShadowing, setShowShadowing] = useState(true);
+  const [dbError, setDbError] = useState(false);
   const { play } = useSoundFeedback();
 
   const handleRate = useCallback(
     async (rating: Rating) => {
       if (!currentCard) return;
 
-      const { updated, log } = rateCard(currentCard, rating);
-      await updateCardFsrs(currentCard.id, updated);
-      await insertReviewLog(log);
+      try {
+        const { updated, log } = rateCard(currentCard, rating);
+        await updateCardFsrs(currentCard.id, updated);
+        await insertReviewLog(log);
+        setDbError(false);
+      } catch {
+        setDbError(true);
+        play("error");
+        return;
+      }
 
       if (rating === Rating.Again) {
         setShake(true);
@@ -49,7 +57,7 @@ export function StudySession() {
 
   if (sessionComplete) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-6">
+      <div className="min-h-full flex flex-col items-center justify-center p-6 gap-6">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -75,14 +83,19 @@ export function StudySession() {
 
   if (!currentCard) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-full flex items-center justify-center">
         <p className="text-slate-500">Aucune carte à réviser</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col p-6 max-w-3xl mx-auto">
+    <div className="min-h-full flex flex-col p-6 max-w-3xl mx-auto">
+      {dbError && (
+        <div className="mb-4 px-4 py-3 rounded-xl bg-rose-600/20 border border-rose-600 text-rose-400 text-sm">
+          Erreur de sauvegarde. Réessayez.
+        </div>
+      )}
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setView("dashboard")}
@@ -130,7 +143,13 @@ export function StudySession() {
           {showShadowing && (
             <ShadowingMic
               targetWord={currentCard.word}
-              onResult={(t) => console.log("shadowing:", t)}
+              onResult={(t) => {
+                const isCorrect = t.toLowerCase().trim() === currentCard.word.toLowerCase().trim();
+                if (isCorrect) {
+                  addXp(2);
+                  play("success");
+                }
+              }}
             />
           )}
 

@@ -12,6 +12,11 @@ import {
   BarChart3,
   Settings,
   Flame,
+  Headphones,
+  Layers,
+  Wand2,
+  Clock,
+  Link2,
 } from "lucide-react";
 import { useLearnStore, type View } from "@/store/useLearnStore";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -27,6 +32,12 @@ const NAV_ITEMS: { view: View; label: string; icon: React.ReactNode; color: stri
   { view: "grammar", label: "Grammaire", icon: <GraduationCap size={20} />, color: "text-indigo-400" },
   { view: "numbers", label: "Nombres", icon: <Hash size={20} />, color: "text-amber-400" },
   { view: "dictation", label: "Dictée", icon: <Mic size={20} />, color: "text-rose-400" },
+  { view: "matching", label: "Association", icon: <Shuffle size={20} />, color: "text-emerald-400" },
+  { view: "listening", label: "Audio Quiz", icon: <Headphones size={20} />, color: "text-sky-400" },
+  { view: "mixed", label: "Mélange", icon: <Layers size={20} />, color: "text-amber-400" },
+  { view: "builder-sentences", label: "Phrases", icon: <Wand2 size={20} />, color: "text-violet-400" },
+  { view: "tenses", label: "Conjugaison", icon: <Clock size={20} />, color: "text-indigo-400" },
+  { view: "prepositions", label: "Prépositions", icon: <Link2 size={20} />, color: "text-teal-400" },
   { view: "stats", label: "Statistiques", icon: <BarChart3 size={20} />, color: "text-violet-400" },
   { view: "settings", label: "Paramètres", icon: <Settings size={20} />, color: "text-slate-400" },
 ];
@@ -67,7 +78,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
               }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 active
-                  ? "bg-slate-700 text-white"
+                  ? "bg-slate-700 text-slate-100"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
               }`}
             >

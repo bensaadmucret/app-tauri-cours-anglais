@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Flame, Brain, Trophy, Star, Target, BookOpen, Zap, Award } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getStats, getRetentionRate } from "@/db/queries";
+import { useStats, useRetentionRate } from "@/hooks/useQueries";
 
 interface Badge {
   id: string;
@@ -15,21 +14,8 @@ interface Badge {
 
 export function Badges() {
   const { streak, xp, dailyGoal } = useLearnStore();
-  const [stats, setStats] = useState({ totalCards: 0, dueCards: 0, reviewedToday: 0 });
-  const [retention, setRetention] = useState({ retention: 0, totalReviews: 0, againCount: 0 });
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const [s, r] = await Promise.all([getStats(), getRetentionRate()]);
-        setStats(s);
-        setRetention(r);
-      } catch {
-        // ignore
-      }
-    }
-    load();
-  }, []);
+  const { data: stats = { totalCards: 0, dueCards: 0, reviewedToday: 0 } } = useStats();
+  const { data: retention = { retention: 0, totalReviews: 0, againCount: 0 } } = useRetentionRate();
 
   const badges: Badge[] = [
     {

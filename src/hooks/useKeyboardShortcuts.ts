@@ -1,10 +1,11 @@
 import { useEffect } from "react";
+import type { DependencyList } from "react";
 
 interface ShortcutHandlers {
   [key: string]: () => void;
 }
 
-export function useKeyboardShortcuts(handlers: ShortcutHandlers, deps: any[] = []) {
+export function useKeyboardShortcuts(handlers: ShortcutHandlers, deps: DependencyList = []) {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement;

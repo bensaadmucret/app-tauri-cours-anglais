@@ -1,5 +1,6 @@
 import { createEmptyCard, fsrs, generatorParameters, Rating, State } from "ts-fsrs";
 import type { Card } from "@/db/schema";
+import type { RecordLogItem, Grade } from "ts-fsrs";
 
 const params = generatorParameters({ request_retention: 0.9 });
 export const f = fsrs(params);
@@ -35,7 +36,6 @@ export function tsFsrsCardFromDb(card: Card): TsFsrsCard {
 }
 
 export function dbCardFromTsFsrs(
-  _cardId: number,
   tsCard: TsFsrsCard
 ) {
   return {
@@ -55,10 +55,10 @@ export function dbCardFromTsFsrs(
 
 export function rateCard(dbCard: Card, rating: Rating) {
   const tsCard = tsFsrsCardFromDb(dbCard);
-  const scheduling = f.repeat(tsCard, new Date()) as any;
-  const result = scheduling[rating];
+  const scheduling = f.repeat(tsCard, new Date());
+  const result: RecordLogItem = scheduling[rating as Grade];
   return {
-    updated: dbCardFromTsFsrs(dbCard.id, result.card),
+    updated: dbCardFromTsFsrs(result.card),
     log: {
       card_id: dbCard.id,
       rating: result.log.rating as number,

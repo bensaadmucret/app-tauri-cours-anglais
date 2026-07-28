@@ -13,21 +13,15 @@ import {
 } from "lucide-react";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLearnStore } from "@/store/useLearnStore";
-import {
-  getGrammarLessons,
-  getGrammarExercises,
-  getGrammarProgress,
-  saveGrammarProgress,
-} from "@/db/queries";
+import { useGrammarLessons, useGrammarProgress } from "@/hooks/useQueries";
+import { getGrammarExercises, saveGrammarProgress } from "@/db/queries";
+import { useQueryClient } from "@tanstack/react-query";
 import type { GrammarLesson, GrammarExercise, GrammarProgress } from "@/db/schema";
 
 export function Grammar() {
   const setView = useLearnStore((s) => s.setView);
   const addXp = useLearnStore((s) => s.addXp);
 
-  const [lessons, setLessons] = useState<GrammarLesson[]>([]);
-  const [progress, setProgress] = useState<GrammarProgress[]>([]);
-  const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"list" | "lesson" | "exercise" | "result">("list");
   const [currentLesson, setCurrentLesson] = useState<GrammarLesson | null>(null);
   const [exercises, setExercises] = useState<GrammarExercise[]>([]);
@@ -43,9 +37,12 @@ export function Grammar() {
   const { speak } = useTextToSpeech();
   const lessonContentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadAll();
-  }, []);
+  const { data: lessons = [], isLoading: loading } = useGrammarLessons(
+    levelFilter === "all" ? undefined : levelFilter,
+    categoryFilter === "all" ? undefined : categoryFilter
+  );
+  const { data: progress = [] } = useGrammarProgress();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (mode !== "lesson" || !lessonContentRef.current) return;
@@ -60,23 +57,6 @@ export function Grammar() {
     buttons.forEach((btn) => btn.addEventListener("click", onClick));
     return () => buttons.forEach((btn) => btn.removeEventListener("click", onClick));
   }, [mode, currentLesson?.content, speak]);
-
-  async function loadAll() {
-    setLoading(true);
-    try {
-      const [data, prog] = await Promise.all([
-        getGrammarLessons(
-          levelFilter === "all" ? undefined : levelFilter,
-          categoryFilter === "all" ? undefined : categoryFilter
-        ),
-        getGrammarProgress(),
-      ]);
-      setLessons(data);
-      setProgress(prog);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function startLesson(lesson: GrammarLesson) {
     setCurrentLesson(lesson);
@@ -117,7 +97,7 @@ export function Grammar() {
       // Finished
       if (currentLesson) {
         await saveGrammarProgress(currentLesson.id, score, exercises.length, exercises[exercises.length - 1].id);
-        setProgress(await getGrammarProgress());
+        await queryClient.invalidateQueries({ queryKey: ["grammarProgress"] });
       }
       addXp(score);
       setMode("result");
@@ -147,7 +127,7 @@ export function Grammar() {
   const levels = ["A1", "A2", "B1", "B2", "C1"];
 
   return (
-    <div className="min-h-screen flex flex-col p-6 max-w-3xl mx-auto">
+    <div className="min-h-full flex flex-col p-6 max-w-3xl mx-auto">
       <button
         onClick={() => mode === "list" ? setView("dashboard") : setMode("list")}
         className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors mb-4"
@@ -173,7 +153,7 @@ export function Grammar() {
               <Filter size={20} className="text-slate-500 mt-2" />
               <select
                 value={levelFilter}
-                onChange={(e) => { setLevelFilter(e.target.value); loadAll(); }}
+                onChange={(e) => { setLevelFilter(e.target.value); }}
                 className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
               >
                 <option value="all">Niveau</option>
@@ -183,7 +163,7 @@ export function Grammar() {
               </select>
               <select
                 value={categoryFilter}
-                onChange={(e) => { setCategoryFilter(e.target.value); loadAll(); }}
+                onChange={(e) => { setCategoryFilter(e.target.value); }}
                 className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
               >
                 <option value="all">Catégorie</option>

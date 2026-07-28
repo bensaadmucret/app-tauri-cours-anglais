@@ -35,7 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <Sidebar onNavigate={() => setMobileOpen(false)} />
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-100"
             >
               <X size={24} />
             </button>

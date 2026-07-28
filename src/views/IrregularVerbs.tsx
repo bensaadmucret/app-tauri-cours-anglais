@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -12,7 +12,8 @@ import {
   Volume2,
 } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getIrregularVerbs } from "@/db/queries";
+import { useIrregularVerbs } from "@/hooks/useQueries";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import type { IrregularVerb } from "@/db/schema";
 
 type Mode = "list" | "learn" | "quiz" | "flashcard";
@@ -21,8 +22,8 @@ export function IrregularVerbs() {
   const setView = useLearnStore((s) => s.setView);
   const addXp = useLearnStore((s) => s.addXp);
 
-  const [verbs, setVerbs] = useState<IrregularVerb[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: verbs = [], isLoading: loading, error: loadError } = useIrregularVerbs();
+  const { speak } = useTextToSpeech();
   const [mode, setMode] = useState<Mode>("list");
   const [filter, setFilter] = useState("all");
 
@@ -36,29 +37,11 @@ export function IrregularVerbs() {
   const [done, setDone] = useState(false);
   const [pastOk, setPastOk] = useState<boolean | null>(null);
   const [partOk, setPartOk] = useState<boolean | null>(null);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   const [fcRev, setFcRev] = useState(false);
   const [search, setSearch] = useState("");
 
   const scoreRef = useRef({ ok: 0, total: 0 });
-
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
-    setLoading(true);
-    setLoadError(null);
-    try {
-      setVerbs(await getIrregularVerbs());
-    } catch (e: any) {
-      setLoadError(e?.message || "Erreur de chargement");
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function pick(count?: number) {
     const src = filter === "all" ? verbs : verbs.filter((v) => v.level === filter);
@@ -133,15 +116,6 @@ export function IrregularVerbs() {
     }
   }
 
-  function speak(text: string) {
-    if ("speechSynthesis" in window) {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "en-US";
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    }
-  }
-
   const v = pool[idx];
   const listVerbs = verbs.filter((vb) => {
     const m = filter === "all" || vb.level === filter;
@@ -151,14 +125,14 @@ export function IrregularVerbs() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-slate-400">
+      <div className="min-h-full flex items-center justify-center text-slate-400">
         Chargement...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-full bg-slate-900 text-slate-100 p-6">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <button
@@ -218,7 +192,7 @@ export function IrregularVerbs() {
             </div>
 
             {loadError && (
-              <p className="text-rose-400 mb-4">Erreur : {loadError}</p>
+              <p className="text-rose-400 mb-4">Erreur : {loadError.message}</p>
             )}
 
             <div className="grid gap-3">
@@ -356,7 +330,7 @@ export function IrregularVerbs() {
             </div>
             <button
               onClick={() => setMode("list")}
-              className="mt-4 text-slate-400 hover:text-white text-sm underline"
+              className="mt-4 text-slate-400 hover:text-slate-100 text-sm underline"
             >
               Retour
             </button>
@@ -514,7 +488,7 @@ export function IrregularVerbs() {
                 </div>
                 <button
                   onClick={() => setMode("list")}
-                  className="text-slate-400 hover:text-white text-sm underline"
+                  className="text-slate-400 hover:text-slate-100 text-sm underline"
                 >
                   Quitter
                 </button>
@@ -638,7 +612,7 @@ export function IrregularVerbs() {
               </div>
               <button
                 onClick={() => setMode("list")}
-                className="block mx-auto mt-4 text-slate-400 hover:text-white text-sm underline"
+                className="block mx-auto mt-4 text-slate-400 hover:text-slate-100 text-sm underline"
               >
                 Retour
               </button>

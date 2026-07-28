@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -10,7 +10,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getDictationSentences, getDictationDifficulties } from "@/db/queries";
+import { useDictationDifficulties } from "@/hooks/useQueries";
+import { getDictationSentences } from "@/db/queries";
 import type { DictationSentence } from "@/db/schema";
 
 type Mode = "menu" | "playing" | "result";
@@ -19,6 +20,7 @@ export function Dictation() {
   const setView = useLearnStore((s) => s.setView);
   const addXp = useLearnStore((s) => s.addXp);
 
+  const { data: difficulties = [] } = useDictationDifficulties();
   const [mode, setMode] = useState<Mode>("menu");
   const [sentences, setSentences] = useState<DictationSentence[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -27,21 +29,7 @@ export function Dictation() {
   const [score, setScore] = useState(0);
   const [difficulty, setDifficulty] = useState("all");
   const [count, setCount] = useState(10);
-  const [difficulties, setDifficulties] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    loadDifficulties();
-  }, []);
-
-  async function loadDifficulties() {
-    try {
-      const diffs = await getDictationDifficulties();
-      setDifficulties(diffs);
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   async function start() {
     setLoading(true);
@@ -131,7 +119,7 @@ export function Dictation() {
 
   if (mode === "menu") {
     return (
-      <div className="min-h-screen flex flex-col p-6 max-w-3xl mx-auto">
+      <div className="min-h-full flex flex-col p-6 max-w-3xl mx-auto">
         <button
           onClick={() => setView("dashboard")}
           className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors mb-6"
@@ -204,7 +192,7 @@ export function Dictation() {
     const maxScore = sentences.length * 10;
     const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="min-h-full flex flex-col items-center justify-center p-6">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -239,14 +227,14 @@ export function Dictation() {
 
   if (!current) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-full flex items-center justify-center">
         <p className="text-slate-500">Aucune phrase disponible</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col p-6 max-w-2xl mx-auto">
+    <div className="min-h-full flex flex-col p-6 max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setMode("menu")}

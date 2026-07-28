@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowLeft, Languages, CheckCircle, AlertCircle, Search, FileText, Star } from "lucide-react";
 import { useLearnStore } from "@/store/useLearnStore";
-import { getTranslationExercises, getTranslationProgress, saveTranslationProgress, getExtendedTranslationExercises, getLongTranslationExercises } from "@/db/queries";
-import type { TranslationExercise, TranslationProgress, ExtendedTranslationExercise, LongTranslationExercise } from "@/db/schema";
+import { useTranslationExercises, useTranslationProgress, useExtendedTranslationExercises, useLongTranslationExercises } from "@/hooks/useQueries";
+import { saveTranslationProgress } from "@/db/queries";
+import type { TranslationExercise, ExtendedTranslationExercise, LongTranslationExercise } from "@/db/schema";
 
 export function TranslationExercises() {
   const setView = useLearnStore((s) => s.setView);
   const addXp = useLearnStore((s) => s.addXp);
 
-  const [exercises, setExercises] = useState<TranslationExercise[]>([]);
-  const [longExercises, setLongExercises] = useState<ExtendedTranslationExercise[]>([]);
-  const [mediumExercises, setMediumExercises] = useState<LongTranslationExercise[]>([]);
-  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"short" | "medium" | "long">("short");
   const [mode, setMode] = useState<"list" | "exercise" | "result" | "long_exercise" | "medium_exercise">("list");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -25,32 +23,15 @@ export function TranslationExercises() {
   const [userTranslation, setUserTranslation] = useState("");
   const [score, setScore] = useState(0);
   const [revealed, setRevealed] = useState(false);
-  const [progress, setProgress] = useState<TranslationProgress[]>([]);
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
-    setLoading(true);
-    try {
-      const [data, prog, long, medium] = await Promise.all([
-        getTranslationExercises(
-          difficultyFilter === "all" ? undefined : difficultyFilter,
-          categoryFilter === "all" ? undefined : categoryFilter
-        ),
-        getTranslationProgress(),
-        getExtendedTranslationExercises(),
-        getLongTranslationExercises(),
-      ]);
-      setExercises(data);
-      setProgress(prog);
-      setLongExercises(long);
-      setMediumExercises(medium);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { data: exercises = [], isLoading: loading } = useTranslationExercises(
+    difficultyFilter === "all" ? undefined : difficultyFilter,
+    categoryFilter === "all" ? undefined : categoryFilter
+  );
+  const { data: progress = [] } = useTranslationProgress();
+  const { data: longExercises = [] } = useExtendedTranslationExercises();
+  const { data: mediumExercises = [] } = useLongTranslationExercises();
+  const queryClient = useQueryClient();
 
   async function startExercise(ex: TranslationExercise) {
     setCurrentEx(ex);
@@ -89,7 +70,7 @@ export function TranslationExercises() {
     if (!currentEx) return;
     await saveTranslationProgress(currentEx.id, score, userTranslation);
     addXp(score);
-    setProgress(await getTranslationProgress());
+    await queryClient.invalidateQueries({ queryKey: ["translationProgress"] });
     setMode("list");
   }
 
@@ -126,14 +107,14 @@ export function TranslationExercises() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-slate-400">
+      <div className="min-h-full flex items-center justify-center text-slate-400">
         Chargement...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-full bg-slate-900 text-slate-100 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <button

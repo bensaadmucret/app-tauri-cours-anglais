@@ -308,6 +308,12 @@ fn main() {
                             sql: include_str!("../migrations/50_rush_translation_fr_null.sql"),
                             kind: tauri_plugin_sql::MigrationKind::Up,
                         },
+                        tauri_plugin_sql::Migration {
+                            version: 51,
+                            description: "add French translations to all irregular verb examples",
+                            sql: include_str!("../migrations/51_irregular_verbs_all_translations.sql"),
+                            kind: tauri_plugin_sql::MigrationKind::Up,
+                        },
                     ],
                 )
                 .build(),

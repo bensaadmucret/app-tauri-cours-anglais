@@ -1,17 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, XCircle, Lightbulb, Shuffle, Volume2 } from "lucide-react";
-
-function speak(text: string) {
-  if (!window.speechSynthesis) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-GB";
-  utterance.rate = 0.9;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
-}
 import { useLearnStore } from "@/store/useLearnStore";
-import { getNumberExercises } from "@/db/queries";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useNumberExercises } from "@/hooks/useQueries";
 import type { NumberExercise } from "@/db/schema";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -30,9 +22,9 @@ const TYPE_LABELS: Record<string, string> = {
 export function NumberExercises() {
   const setView = useLearnStore((s) => s.setView);
   const addXp = useLearnStore((s) => s.addXp);
+  const { speak } = useTextToSpeech();
 
-  const [allExercises, setAllExercises] = useState<NumberExercise[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: allExercises = [], isLoading: loading } = useNumberExercises();
   const [mode, setMode] = useState<"list" | "quiz">("list");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
@@ -47,20 +39,6 @@ export function NumberExercises() {
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [showHint, setShowHint] = useState(false);
-
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
-    setLoading(true);
-    try {
-      const data = await getNumberExercises();
-      setAllExercises(data);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const filtered = allExercises.filter((e) => {
     const t = typeFilter === null || e.type === typeFilter;
@@ -142,14 +120,14 @@ export function NumberExercises() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-slate-400">
+      <div className="min-h-full flex items-center justify-center text-slate-400">
         Chargement...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-full bg-slate-900 text-slate-100 p-6">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <button
@@ -234,9 +212,9 @@ export function NumberExercises() {
                     <button
                       onClick={() => {
                         const firstAnswer = ex.answer.split("/")[0].trim();
-                        speak(firstAnswer);
+                        speak(firstAnswer, "en-GB");
                       }}
-                      className="p-1.5 rounded-lg bg-slate-700 hover:bg-amber-600 text-slate-400 hover:text-white transition-colors"
+                      className="p-1.5 rounded-lg bg-slate-700 hover:bg-amber-600 text-slate-400 hover:text-slate-100 transition-colors"
                       title="Écouter"
                     >
                       <Volume2 size={16} />
@@ -283,7 +261,7 @@ export function NumberExercises() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <h2 className="text-4xl font-bold text-amber-400">{current.question}</h2>
                 <button
-                  onClick={() => speak(current.question)}
+                  onClick={() => speak(current.question, "en-GB")}
                   className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-amber-400 transition-colors"
                   title="Écouter la prononciation"
                 >
@@ -364,7 +342,7 @@ export function NumberExercises() {
                     <button
                       onClick={() => {
                         const firstAnswer = current.answer.split("/")[0].trim();
-                        speak(firstAnswer);
+                        speak(firstAnswer, "en-GB");
                       }}
                       className="flex items-center gap-1 mt-2 text-xs text-amber-400 hover:text-amber-300 transition-colors"
                     >

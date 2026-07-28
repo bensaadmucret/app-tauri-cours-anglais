@@ -16,6 +16,12 @@ const NumberExercises = lazy(() => import("@/views/NumberExercises").then((m) =>
 const Dictation = lazy(() => import("@/views/Dictation").then((m) => ({ default: m.Dictation })));
 const Stats = lazy(() => import("@/views/Stats").then((m) => ({ default: m.Stats })));
 const Settings = lazy(() => import("@/views/Settings").then((m) => ({ default: m.Settings })));
+const WordMatching = lazy(() => import("@/views/WordMatching").then((m) => ({ default: m.WordMatching })));
+const ListeningQuiz = lazy(() => import("@/views/ListeningQuiz").then((m) => ({ default: m.ListeningQuiz })));
+const MixedReview = lazy(() => import("@/views/MixedReview").then((m) => ({ default: m.MixedReview })));
+const SentenceBuilder = lazy(() => import("@/views/SentenceBuilder").then((m) => ({ default: m.SentenceBuilder })));
+const TenseTrainer = lazy(() => import("@/views/TenseTrainer").then((m) => ({ default: m.TenseTrainer })));
+const Prepositions = lazy(() => import("@/views/Prepositions").then((m) => ({ default: m.Prepositions })));
 
 export default function App() {
   const currentView = useLearnStore((s) => s.currentView);
@@ -44,6 +50,12 @@ export default function App() {
               {currentView === "dictation" && <Dictation />}
               {currentView === "stats" && <Stats />}
               {currentView === "settings" && <Settings />}
+              {currentView === "matching" && <WordMatching />}
+              {currentView === "listening" && <ListeningQuiz />}
+              {currentView === "mixed" && <MixedReview />}
+              {currentView === "builder-sentences" && <SentenceBuilder />}
+              {currentView === "tenses" && <TenseTrainer />}
+              {currentView === "prepositions" && <Prepositions />}
             </Suspense>
           </motion.div>
         </AnimatePresence>
