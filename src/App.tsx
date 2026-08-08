@@ -22,6 +22,7 @@ const MixedReview = lazy(() => import("@/views/MixedReview").then((m) => ({ defa
 const SentenceBuilder = lazy(() => import("@/views/SentenceBuilder").then((m) => ({ default: m.SentenceBuilder })));
 const TenseTrainer = lazy(() => import("@/views/TenseTrainer").then((m) => ({ default: m.TenseTrainer })));
 const Prepositions = lazy(() => import("@/views/Prepositions").then((m) => ({ default: m.Prepositions })));
+const VocabularyByTheme = lazy(() => import("@/views/VocabularyByTheme").then((m) => ({ default: m.VocabularyByTheme })));
 
 export default function App() {
   const currentView = useLearnStore((s) => s.currentView);
@@ -56,6 +57,7 @@ export default function App() {
               {currentView === "builder-sentences" && <SentenceBuilder />}
               {currentView === "tenses" && <TenseTrainer />}
               {currentView === "prepositions" && <Prepositions />}
+              {currentView === "vocabulary" && <VocabularyByTheme />}
             </Suspense>
           </motion.div>
         </AnimatePresence>

@@ -162,3 +162,12 @@ export interface DictationSentence {
   audio_url: string | null;
   created_at: number;
 }
+
+export interface ThematicVocabulary {
+  id: number;
+  theme_id: number;
+  theme_fr: string;
+  word_en: string;
+  word_fr: string;
+  created_at: number;
+}

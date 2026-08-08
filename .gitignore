@@ -27,8 +27,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Vocable PDFs (source material, not for commit)
+# Source PDFs (not for commit)
 Vocable Anglais/
+*.pdf
 
 # Misc
 *.tgz

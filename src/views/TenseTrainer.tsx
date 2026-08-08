@@ -217,20 +217,18 @@ export function TenseTrainer() {
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 mb-6">
+      <div key={currentIdx} className="bg-slate-800 rounded-2xl p-6 border border-slate-700 mb-6">
         <span className="text-xs font-bold uppercase text-indigo-400 mb-2 block">{q.tense} — "{q.verb}"</span>
         <p className="text-lg font-medium">{q.sentence}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div key={`opts-${currentIdx}`} className="grid grid-cols-2 gap-3">
         {q.options.map((option) => {
           const isCorrect = option === q.answer;
           const isSelected = selected === option;
           return (
-            <motion.button
-              key={option}
-              whileHover={!showFeedback ? { scale: 1.02 } : undefined}
-              whileTap={!showFeedback ? { scale: 0.98 } : undefined}
+            <button
+              key={`${currentIdx}-${option}`}
               onClick={() => handleAnswer(option)}
               disabled={showFeedback}
               className={`px-5 py-4 rounded-xl border font-medium transition-all ${
@@ -248,7 +246,7 @@ export function TenseTrainer() {
                 {showFeedback && isSelected && !isCorrect && <XCircle size={18} className="text-rose-400" />}
                 {option}
               </div>
-            </motion.button>
+            </button>
           );
         })}
       </div>

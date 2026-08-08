@@ -16,6 +16,9 @@ import {
   getReviewHistory,
   getRetentionRate,
   getActivityHeatmap,
+  getThematicVocabularyThemes,
+  getThematicVocabularyByTheme,
+  getAllThematicVocabulary,
 } from "@/db/queries";
 
 export function useStats() {
@@ -127,5 +130,27 @@ export function useActivityHeatmap(days: number) {
   return useQuery({
     queryKey: ["activityHeatmap", days],
     queryFn: () => getActivityHeatmap(days),
+  });
+}
+
+export function useThematicVocabularyThemes() {
+  return useQuery({
+    queryKey: ["thematicVocabThemes"],
+    queryFn: getThematicVocabularyThemes,
+  });
+}
+
+export function useThematicVocabularyByTheme(themeId: number | null) {
+  return useQuery({
+    queryKey: ["thematicVocab", themeId],
+    queryFn: () => getThematicVocabularyByTheme(themeId!),
+    enabled: themeId !== null,
+  });
+}
+
+export function useAllThematicVocabulary() {
+  return useQuery({
+    queryKey: ["allThematicVocab"],
+    queryFn: getAllThematicVocabulary,
   });
 }

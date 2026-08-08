@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress, LongTranslationExercise, ExtendedTranslationExercise, NumberExercise, DictationSentence } from "./schema";
+import type { Card, CardInput, Deck, ReviewLog, IrregularVerb, PhrasalVerb, TranslationExercise, TranslationProgress, GrammarLesson, GrammarExercise, GrammarProgress, LongTranslationExercise, ExtendedTranslationExercise, NumberExercise, DictationSentence, ThematicVocabulary } from "./schema";
 
 let db: Database | null = null;
 
@@ -563,4 +563,24 @@ export async function backupDatabase(): Promise<string> {
   const backupPath = dbPath.replace(/\.db$/, `-backup-${timestamp}.db`);
   await db.execute(`VACUUM INTO '${backupPath}'`);
   return backupPath;
+}
+
+export async function getThematicVocabularyThemes(): Promise<{ theme_id: number; theme_fr: string; count: number }[]> {
+  const db = await getDb();
+  return db.select<{ theme_id: number; theme_fr: string; count: number }[]>(
+    "SELECT theme_id, theme_fr, COUNT(*) as count FROM thematic_vocabulary GROUP BY theme_id ORDER BY theme_id ASC"
+  );
+}
+
+export async function getThematicVocabularyByTheme(themeId: number): Promise<ThematicVocabulary[]> {
+  const db = await getDb();
+  return db.select<ThematicVocabulary[]>(
+    "SELECT * FROM thematic_vocabulary WHERE theme_id = ? ORDER BY id ASC",
+    [themeId]
+  );
+}
+
+export async function getAllThematicVocabulary(): Promise<ThematicVocabulary[]> {
+  const db = await getDb();
+  return db.select<ThematicVocabulary[]>("SELECT * FROM thematic_vocabulary ORDER BY theme_id ASC, id ASC");
 }

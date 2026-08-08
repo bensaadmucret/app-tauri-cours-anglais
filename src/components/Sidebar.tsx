@@ -17,6 +17,7 @@ import {
   Wand2,
   Clock,
   Link2,
+  BookOpen,
 } from "lucide-react";
 import { useLearnStore, type View } from "@/store/useLearnStore";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -38,6 +39,7 @@ const NAV_ITEMS: { view: View; label: string; icon: React.ReactNode; color: stri
   { view: "builder-sentences", label: "Phrases", icon: <Wand2 size={20} />, color: "text-violet-400" },
   { view: "tenses", label: "Conjugaison", icon: <Clock size={20} />, color: "text-indigo-400" },
   { view: "prepositions", label: "Prépositions", icon: <Link2 size={20} />, color: "text-teal-400" },
+  { view: "vocabulary", label: "Vocabulaire", icon: <BookOpen size={20} />, color: "text-emerald-400" },
   { view: "stats", label: "Statistiques", icon: <BarChart3 size={20} />, color: "text-violet-400" },
   { view: "settings", label: "Paramètres", icon: <Settings size={20} />, color: "text-slate-400" },
 ];
